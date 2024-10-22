@@ -4,6 +4,67 @@
         <!-- Content Row -->
         <div class="card mb-4">
             <div class="card-header py-3">
+                <h5 class="text-primary mx-3"><b><i class="icon-line-database" style="padding-right: 5px"></i>TÌNH TRẠNG
+                        CHECKLIST EQM</b>
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <span>Line:</span>
+                        <select name="line" id="Line_search" class="form-select">
+                        </select>
+                    </div>
+                    <div class=" col-sm-3 col-md-3  bottommargin-sm">
+                        <label for="">Date Search</label>
+                        <div class="input-daterange component-datepicker input-group">
+                            <input type="text" value="" class="form-control text-start" id="date_form"
+                                placeholder="YYYY-MM-DD">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <span>Shift:</span>
+                        <select name="shift" id="shift_search" class="form-select">
+                            <option value="">All</option>
+                            <option value="Ca ngày">Ca ngày</option>
+                            <option value="Ca đêm">Ca đêm</option>
+
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <span>
+                            <br>
+                        </span>
+                        <button id="Search" class="form-control btn-success"><i
+                                class="icon-line-search"></i>Search</button>
+                    </div>
+
+                </div>
+                <br>
+                <table id="table_check_list_search" class="table table-bordered table-hover"
+                    style="width:100%;border-collapse:collapse;">
+                    {{-- <thead class="table-success">
+                        <tr>
+                            <th style="width:3%">STT</th>
+                            <th style="width:7%">Machine</th>
+                            <th style="width:7%">Item check</th>
+                            <th style="width:auto">Nội dung</th>
+                            <th style="width:7%">Remark</th>
+                            <th style="width:7%">Tình trạng</th>
+                            <th style="width:10%">Vấn đề</th>
+                            <th style="width:7%">Tiến độ</th>
+                        </tr>
+                    </thead> --}}
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header py-3">
                 <h5 class="text-primary mx-3"><b><i class="icon-line-check-square" style="padding-right: 5px"></i>CHECK LIST
                         EQM ILSUNG</b>
                 </h5>
@@ -94,115 +155,6 @@
             </div>
         </div>
 
-
-
-        {{-- <div class="card mb-4">
-            <div class="card-header py-3">
-                <h5 class="text-primary mx-3"><b><i class="icon-line-database" style="padding-right: 5px"></i>DATA CHECK
-                        LIST PRO-3M</b>
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-
-                    <div class="col-sm-2">
-                        <span>Checklist:</span>
-                        <select name="" id="check_list_search" class="form-select">
-                        </select>
-                    </div>
-                    <div class="col-sm-2">
-                        <span>Loại Line:</span>
-                        <select name="line_type" id="line_type_search" class="form-select">
-                        </select>
-                    </div>
-
-                    <div class="col-sm-2">
-                        <span>Công đoạn:</span>
-                        <select name="cong_doan" id="cong_doan_search" class="form-select">
-                        </select>
-                    </div>
-
-                    <div class="col-sm-2">
-                        <span>Phân Loại:</span>
-                        <select name="phan_loai_search" id="phan_loai_search" class="form-select">
-                        </select>
-                    </div>
-
-                    <div class="col-sm-2">
-                        <span>Line:</span>
-                        <select name="line" id="line_search" class="form-select">
-                        </select>
-                    </div>
-                    <div class="col-sm-2">
-                        <span> Status: </span>
-                        <select name="status" id="status_search" class="form-select">
-                            <option value="">---</option>
-                            <option value="ON">OK</option>
-                            <option value="OFF">NG</option>
-                        </select>
-                    </div>
-
-
-
-                    <div class="col-sm-12">
-                        <br>
-                    </div>
-
-                    <div class="col-sm-2">
-                        <span>
-                            <br>
-                        </span>
-                        <button id="Search" class="form-control btn-success"><i
-                                class="icon-line-search"></i>Search</button>
-                    </div>
-
-                    <div class="col-sm-2">
-                        <span>
-                            <br>
-                        </span>
-                        <button id="Search_all" class="form-control btn-success"><i class="icon-line-search"></i>Search
-                            all
-                        </button>
-                    </div>
-
-                    <div class=" col-sm-4 col-md-4  bottommargin-sm">
-                        <label for="">Date Search</label>
-                        <div class="input-daterange component-datepicker input-group">
-                            <input type="text" value="" class="form-control text-start" id="date_form"
-                                placeholder="MM/DD/YYYY">
-                            <div class="input-group-text">to</div>
-                            <input type="text" value="" class="form-control text-start" id="date_to"
-                                placeholder="MM/DD/YYYY">
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <span> Tình trạng line: </span>
-                        <select name="status" id="tinh_trang_search" class="form-select">
-                            <option value="">---</option>
-                            <option value="ON">ON</option>
-                            <option value="OFF">OFF</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-2">
-                        <span>Shift:</span>
-                        <select name="shift" id="shift_search" class="form-select">
-                            <option value="">---</option>
-                            <option value="Staff">Staff</option>
-                            <option value="Shift1A">Shift1A</option>
-                            <option value="Shift2A">Shift2A</option>
-                        </select>
-                    </div>
-
-                </div>
-                <br>
-
-                <table id="table_check_list_search" class="table table-bordered table-hover"
-                    style="width:100%;border-collapse:collapse;">
-                </table>
-
-            </div>
-
-        </div> --}}
         {{-- model show check list --}}
 
         <div class="modal" id="modal-show">
@@ -230,6 +182,116 @@
             </div>
         </div>
 
+        <div class="modal" id="modal-check">
+            <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="text-primary mx-3"><b><i class="icon-line-database"
+                                    style="padding-right: 5px"></i>DATA
+                                CHECK LIST PRO-3M</b>
+                        </h5>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary close" id="close-model">Close</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-sm-2">
+                                <span>Checklist:</span>
+                                <select name="check_list" id="check_list" class="form-select">
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <span>Loại Line:</span>
+                                <select name="line_type" id="line_type" class="form-select">
+
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <span>Công Đoạn:</span>
+                                <select name="cong_doan" id="cong_doan" class="form-select">
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <span>Phân Loại:</span>
+                                <select name="phan_loai" id="phan_loai" class="form-select">
+                                </select>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <span>Line:</span>
+                                <select name="line" id="line" class="form-select">
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <span>Shift:</span>
+                                <select name="shift" id="shift" class="form-select">
+                                    <option value="Shift1A">Shift1A</option>
+                                    <option value="Shift2A">Shift2A</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <br>
+                            </div>
+                            <div class="col-sm-2">
+                                <span> Tình trạng: </span>
+                                <select name="status" id="status" class="form-select">
+                                    <option value="ON" selected>ON</option>
+                                    <option value="OFF">OFF</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <span>Gen:</span>
+                                <input name="gen" type="number" id="gen" class="form-control"
+                                    placeholder="Nhập gen...">
+                            </div>
+                            <div class="col-sm-2">
+                                <span>Tên:</span>
+                                <input name="name" type="text" id="name" class="form-control"
+                                    placeholder="Nhập tên...">
+                            </div>
+                            <div class="col-sm-2">
+                                <span>Bộ phận:</span>
+                                <input name="part" type="text" id="part" class="form-control">
+                            </div>
+                            <div class="col-sm-2">
+                                <span>Thời gian:</span>
+                                <input type="text" name="date_check" id="date_check" class="form-control">
+                            </div>
+                            <div class="col-sm-2">
+                                <span>
+                                    <br>
+                                </span>
+                                <button id="save-check-list" class="form-control btn-success"><i
+                                        class="icon-line-check"></i>Save
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <br>
+                        <table class="table table-bordered text-center mt-4 table-hover" id="table-check-list"
+                            style="width: 100%; text-align: center; vertical-align:middle">
+                            <thead class="table-success">
+                                <tr>
+                                    <th style="width:3%">STT</th>
+                                    <th style="width:7%">Check List</th>
+                                    <th style="width:7%">Công đoạn</th>
+                                    <th style="width:7%">Phân loại</th>
+                                    <th style="width:auto">Nội dung</th>
+                                    <th style="width:7%">Tình trạng</th>
+                                    <th style="width:10%">Vấn đề</th>
+                                    <th style="width:7%">Tiến độ</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     </div>
 @endsection
@@ -245,6 +307,9 @@
             var table_result = table;
             var table_result_detail = table_2;
             var ID_machine_list = [];
+            const currentDate = new Date();
+            const date = currentDate.toISOString().split('T')[0];
+            $('#date_form').val(date);
 
             localStorage.setItem('activeItem', 'overview');
             var activeItem = localStorage.getItem('activeItem');
@@ -257,6 +322,7 @@
                 }
             }
 
+
             function activeLink() {
                 var itemId = this.id;
                 list.forEach((item) => {
@@ -266,6 +332,28 @@
                 localStorage.setItem('activeItem', itemId);
             }
             show_master();
+            show_master_status();
+
+            function show_master_status() {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('check.list.masster') }}",
+                    dataType: "json",
+                    success: function(response) {
+                        $('#line_search').empty();
+                        $.each(response.line, function(index, value) {
+                            $('#Line_search').append($('<option>', {
+                                value: value.id,
+                                text: value.line_name,
+                            }));
+                        });
+
+
+
+                    }
+                });
+
+            }
 
             function show_master() {
                 $.ajax({
@@ -487,20 +575,20 @@
                             var status =
                                 '<select name = "status" id="' + value.id +
                                 '" class="form-select">\
-                                                                                         <option value = "OK">OK</option>\
-                                                                                       <option value = "NG">NG</option>\
-                                                                                       </select>';
+                                                                                                         <option value = "OK">OK</option>\
+                                                                                                       <option value = "NG">NG</option>\
+                                                                                                       </select>';
                             var problem =
                                 '<input name="problem" type="text" id="' + value.id +
                                 '" class="form-control">';
                             var process =
                                 '<select name = "process" id="' + value.id +
                                 '"class="form-select">\
-                                                                                          <option value = "OK"></option>\
-                                                                                          <option value = "Complete">Complete</option>\
-                                                                                         <option value = "Pending">Pending</option>\
-                                                                                        <option value = "Improgress" >Improgress</option>\
-                                                                                        </select >';
+                                                                                                          <option value = "OK"></option>\
+                                                                                                          <option value = "Complete">Complete</option>\
+                                                                                                         <option value = "Pending">Pending</option>\
+                                                                                                        <option value = "Improgress" >Improgress</option>\
+                                                                                                        </select >';
                             data.push([
                                 count,
                                 value.Machine,
@@ -524,7 +612,336 @@
                 });
             }
 
+            $(document).on('click', '#Search', function(e) {
+                e.preventDefault();
+                if (tables) {
+                    $('#table_check_list_search').DataTable().destroy();
+                }
+                var line_search = $('#line_search option:selected').text();
+                var shift_search = $('#shift_search option:selected').text();
+                var date_form = Convertdate($('#date_form').val());
+    
+                if ($('#date_form').val() == 0) {
+                    alert('Vui lòng chọn thời gian kiểm tra');
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('check.list.overview') }}",
+                        dataType: 'json',
+                        data: {
+                            groups: tab,
+                            check_list: check_list_search,
+                            cong_doan: cong_doan_search,
+                            line_type: line_type_search,
+                            phan_loai: phan_loai_search,
+                            line: line_search,
+                            shift: shift_search,
+                            date_form: date_form,
+                            table: table_result + year,
+                            groups: tab
+                        },
+                        success: function(users) {
+                            var count = 0;
+                            var data = [];
+                            var colum = [];
+                            var data;
+                            $.each(users.data, function(index, value) {
+                                count++;
+                                if (value.Check_status == "Pending") {
+                                    var view = '<button type="button" value="' + value
+                                        .id_phan_loai +
+                                        '" data-bs-toggle="modal" data-bs-target="#modal-show" class="btn btn-primary check editbtn btn-sm" id="' +
+                                        value.id + '">View</button>' +
+                                        ' <input type="hidden" value="' + date_form +
+                                        '" id="date_check_' + value
+                                        .id + '">';
+                                } else {
+                                    var view = '<button type="button" value="' + value
+                                        .id_phan_loai +
+                                        '" data-bs-toggle="modal" data-bs-target="#modal-check" class="btn btn-danger check editbtn btn-sm" id="' +
+                                        value.id + '">Check</button>' +
+                                        ' <input type="hidden" value="' + date_form +
+                                        '" id="date_check_' + value
+                                        .id + '">';
+                                }
 
+
+                                data.push([
+                                    count,
+                                    value.Location,
+                                    value.Machine,
+                                    value.Code_machine,
+                                    value.item_checklist,
+                                    value.Khung_check,
+                                    value.Shift,
+                                    value.Check_status,
+                                    value.Date_check,
+                                    view,
+                                ]);
+                            });
+
+                            var header =
+                                '<thead class="table-success" style="text-align: center; vertical-align:middle">' +
+                                '<tr style="text-align: center">' +
+                                '<th style="text-align: center">STT</th>' +
+                                '<th style="text-align: center">Line</th>' +
+                                '<th style="text-align: center">Machine</th>' +
+                                '<th style="text-align: center">Code QL</th>' +
+                                '<th style="text-align: center">Check List</th>' +
+                                '<th style="text-align: center">Khung check</th>' +
+                                '<th style="text-align: center">Shift</th>' +
+                                '<th style="text-align: center">Trạng thái</th>' +
+                                '<th style="text-align: center">Date</th>' +
+                                '<th style="text-align: center">Edit</th>' +
+                                '</tr>'
+                            '</thead>'
+
+                            $('#table_check_list_search').html(header);
+                            tables = $('#table_check_list_search').DataTable({
+                                data: data,
+                                "info": true,
+                                'ordering': false,
+                                'autowidth': true,
+                                "dom": 'Bfrtip',
+                                select: {
+                                    style: 'single',
+                                },
+
+                            });
+                        }
+                    });
+                }
+            });
+
+            // $(document).on('click', '#save-check-list', function(e) {
+            //     e.preventDefault();
+            //     var data1 = [];
+            //     var data2 = [];
+            //     var group = tab;
+            //     var check_list = $('#check_list option:selected').text();
+            //     var cong_doan = $('#cong_doan option:selected').text();
+            //     var line_type = $('#line_type option:selected').text();
+            //     var phan_loai = $('#phan_loai option:selected').text();
+            //     var line = $('#line option:selected').text();
+            //     var shifts = $('#shift option:selected').text();
+            //     var tinh_trang = $('#status option:selected').text();
+            //     var name = $('#gen').val() + ' - ' + $('#name').val();
+            //     var part = $('#part').val();
+            //     var problems_1 = "";
+            //     var status_1 = 'OK';
+            //     var process_1 = '';
+
+
+
+            //     var date = $('#date_check').val();
+            //     var d1 = date.split('-');
+            //     var year = '_' + d1[0] + '_' + d1[1];
+            //     var table_1 = table_result + year;
+            //     var table_2 = table_result_detail + year;
+            //     console.log(table_1);
+            //     console.log(table_2);
+
+            //     if (line == '---' || shifts == '---' || tinh_trang == '---' || phan_loai == '---' || name ==
+            //         ' - ' || part == '') {
+            //         alert('Bạn điền thiếu thông tin');
+            //     } else {
+            //         $('#table-check-list').DataTable().rows().every(function() {
+            //             var status = $(this.node()).find('select[name="status"] option:selected')
+            //                 .text();
+            //             var process = $(this.node()).find('select[name="process"] option:selected')
+            //                 .text();
+
+            //             if (status == 'NG') {
+            //                 status_1 = "NG";
+            //                 process_1 = process;
+            //             }
+            //         });
+            //         var data1 = {
+            //             id_check_list_line: id_master,
+            //             groups: group,
+            //             check_list: check_list,
+            //             phan_loai: phan_loai,
+            //             cong_doan: cong_doan,
+            //             line_type: line_type,
+            //             line: line,
+            //             shifts: shifts,
+            //             name: name,
+            //             part: part,
+            //             tinh_trang: tinh_trang,
+            //             status: status_1,
+            //             problem: problems_1,
+            //             process: process_1,
+            //             date: date
+            //         }
+            //         $.ajax({
+            //             type: "POST",
+            //             url: "{{ route('admin.save.check.list.pending', ':table') }}".replace(
+            //                 ':table', table_1),
+            //             dataType: 'json',
+            //             data: data1,
+            //             success: function(response) {
+            //                 if (response.status == 400) {
+            //                     alert("Checklist đã tồn tại")
+            //                 } else {
+            //                     var id = response.id;
+            //                     $('#table-check-list').DataTable().rows().every(function() {
+            //                         var rowData = this.data();
+            //                         var problems = $(this.node()).find('input').val();
+            //                         var status = $(this.node()).find(
+            //                                 'select[name="status"] option:selected')
+            //                             .text();
+            //                         var process = $(this.node()).find(
+            //                                 'select[name="process"] option:selected')
+            //                             .text();
+            //                         var newData = {
+            //                             id_check_list: id,
+            //                             groups: group,
+            //                             check_list: rowData[1],
+            //                             cong_doan: rowData[2],
+            //                             phan_loai: rowData[3],
+            //                             comment: rowData[4],
+            //                             line: line,
+            //                             line_type: line_type,
+            //                             shifts: shifts,
+            //                             name: name,
+            //                             part: part,
+            //                             tinh_trang: tinh_trang,
+            //                             status: status,
+            //                             problem: problems,
+            //                             process: process,
+            //                             date: date
+            //                         }
+            //                         data2.push(newData);
+            //                     })
+            //                     $.ajax({
+            //                         type: "POST",
+            //                         url: "{{ route('admin.save.check.list.detail', ':table') }}"
+            //                             .replace(':table', table_2),
+            //                         contentType: 'application/json',
+            //                         data: JSON.stringify(data2),
+            //                         success: function(users) {
+            //                             alert('save check-list Thành công');
+
+            //                             for (var i = rowSelected.length - 1; i >=
+            //                                 0; i--) {
+            //                                 tables.row(rowSelected[i]).remove();
+            //                             }
+            //                             tables.draw();
+
+            //                             $('#table_check_list_view').DataTable()
+            //                                 .clear().destroy();
+            //                             $('#table_check_list_view thead tr')
+            //                                 .remove();
+            //                             $('#modal-show').modal('hide');
+            //                         }
+            //                     });
+            //                 }
+            //             }
+            //         });
+            //     }
+            // });
+
+            $(document).on('click', '.check', function(e) {
+                e.preventDefault();
+                var check_list_search = $(this).val();
+                id_master = this.id;
+                var date = $('#date_check_' + id_master).val();
+                rowSelected = tables.rows('.selected').indexes();
+
+                $.ajax({
+                    type: "GET",
+                    url: '{{ route('admin.check.list.search.overview') }}',
+                    data: {
+                        id: check_list_search,
+                        id_master: id_master,
+                        groups: tab,
+
+                    },
+                    success: function(response) {
+                        $('#table-check-list').DataTable().destroy();
+                        var count = 0;
+                        var data = [];
+                        var master = response.data_master;
+                        $.each(master, function(index, value) {
+                            $('#check_list').empty();
+                            $('#line_type').empty();
+                            $('#cong_doan').empty();
+                            $('#phan_loai').empty();
+                            $('#line').empty();
+                            $('#shifts').empty();
+
+                            $('#check_list').append($('<option>', {
+                                value: value.id,
+                                text: value.check_list,
+                            }));
+                            $('#line_type').append($('<option>', {
+                                value: value.id,
+                                text: value.line_type,
+                            }));
+                            $('#cong_doan').append($('<option>', {
+                                value: value.id,
+                                text: value.cong_doan,
+                            }));
+                            $('#phan_loai').append($('<option>', {
+                                value: value.id,
+                                text: value.phan_loai,
+                            }));
+                            $('#line').append($('<option>', {
+                                value: value.id,
+                                text: value.line,
+                            }));
+                            $('#shifts').append($('<option>', {
+                                value: value.id,
+                                text: value.shifts,
+                            }));
+                        });
+                        $('#date_check').val(date);
+
+                        $.each(response.data_check_list, function(index, value) {
+                            count++;
+
+                            var status =
+                                '<select name = "status" id="' + value.id +
+                                '" class="form-control">\
+                                                                                                                                                             <option value = "OK">OK</option>\
+                                                                                                                                                             <option value = "NG">NG</option>\
+                                                                                                                                                             </select>';
+
+                            var problem =
+                                '<input name="problem" type="text" id="' + value.id +
+                                '" class="form-control">';
+                            var process =
+                                '<select name = "process" id="' + value.id +
+                                '"class="form-select ">\
+                                                                                                                                                             <option value = "OK"></option>\
+                                                                                                                                                             <option value = "Complete">Complete</option>\
+                                                                                                                                                             <option value = "Pending">Pending</option>\
+                                                                                                                                                            <option value = "Improgress" >Improgress</option>\
+                                                                                                                                                            </select >';
+
+                            data.push([
+                                count,
+                                $('#check_list option:selected').text(),
+                                $('#cong_doan option:selected').text(),
+                                $('#phan_loai option:selected').text(),
+                                value.comment,
+                                status,
+                                problem,
+                                process
+                            ]);
+                        });
+                        $('#table-check-list').DataTable().destroy();
+                        $('#table-check-list').DataTable({
+                            data: data,
+                            "info": false,
+                            'ordering': false,
+                            'searching': false,
+                        });
+
+                    }
+                });
+
+            });
 
             function Convertdate(date) {
 
@@ -538,9 +955,6 @@
                 e.preventDefault();
                 var data = [];
                 var data2 = [];
-                const currentDate = new Date();
-                const date = currentDate.toISOString().split('T')[0];
-
                 var ID_item_checklist = $('#Khung_gio option:selected').val();
                 var line = $('#Line option:selected').text();
                 var Model = $('#Model option:selected').text();
@@ -585,7 +999,7 @@
                         success: function(response) {
                             if (response.status == 400) {
                                 alert('Update plan check list');
-                                
+
                             } else {
                                 var id = response.id;
                                 console.log(id);

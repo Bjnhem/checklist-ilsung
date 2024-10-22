@@ -151,6 +151,53 @@ class check_list_controller extends Controller
     }
 
 
+    
+    public function search_check_list_overview(Request $request)
+    {
+        
+        $line = ($request->input('line') == '---') ? null : $request->input('line');
+        $shift = ($request->input('shift') == '---') ? null : $request->input('shift');
+        $date_form = $request->input('date_form');
+        $table = 'App\\Models\\checklist_result';
+        $master_line = 'App\\Models\\' . $request->input('groups') . '_master_line';
+        if ($request->ajax()) {
+            if (class_exists($table)) {
+                $data = $table::all();
+                $colum = array_keys($data->first()->getAttributes());
+                $colums = array_diff($colum, ['updated_at']);
+                $data = $table::select($colums)
+                    ->where('groups', 'LIKE', '%' . $groups . '%')
+                    ->where('check_list', 'LIKE', '%' . $check_list . '%')
+                    ->where('cong_doan', 'LIKE', '%' . $cong_doan . '%')
+                    ->where('line_type', 'LIKE', '%' . $line_type . '%')
+                    ->where('phan_loai', 'LIKE', '%' . $phan_loai . '%')
+                    ->where('line', 'LIKE', '%' . $line . '%')
+                    ->where('shifts', 'LIKE', '%' .  $shift . '%')
+                    ->where('date', $date_form)
+                    ->pluck('id_check_list_line')->toArray();
+                /*   ->get(); */
+                $data = array_unique($data);
+                $data_check_list = $master_line::whereNotIn('id', $data)
+                    ->where('groups', 'LIKE', '%' . $groups . '%')
+                    ->where('check_list', 'LIKE', '%' . $check_list . '%')
+                    ->where('cong_doan', 'LIKE', '%' . $cong_doan . '%')
+                    ->where('phan_loai', 'LIKE', '%' . $phan_loai . '%')
+                    ->where('line_type', 'LIKE', '%' . $line_type . '%')
+                    ->where('line', 'LIKE', '%' . $line . '%')
+                    ->where('shifts', 'LIKE', '%' .  $shift . '%')
+                    ->get();
+
+                return response()->json([
+                    'data' => $data_check_list,
+                    'colums' => $colums,
+                    'status' => 200,
+                ]);
+            }
+            return abort(404);
+        }
+        return abort(404);
+    }
+
     // public function line_type_search(Request $request)
     // {
 

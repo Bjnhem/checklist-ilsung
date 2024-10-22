@@ -289,7 +289,8 @@
             });
 
             $('.component-datepicker.input-daterange').datepicker({
-                autoclose: true
+                autoclose: true,
+                format: 'yyyy-mm-dd'
             });
 
             var activeItem = localStorage.getItem('activeItem');

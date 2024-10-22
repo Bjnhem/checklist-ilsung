@@ -36,6 +36,10 @@ Route::prefix('check-list')->group(function () {
     Route::get('/item-check', [check_list_controller::class, 'Machine_ID_search'])->name('item.checklist.search');  // show model search
     Route::get('/khung-gio-check', [check_list_controller::class, 'Khung_check'])->name('khung.check.search');  // show model search
     
+
+    Route::post('/check-list-overview', [check_list_controller::class, 'search_check_list_overview'])->name('check.list.overview');  // show model search
+
+
     Route::get('/check-list-show', [check_list_controller::class, 'check_list_detail'])->name('check.list.search');  // show model search
     Route::post('/save-check-list/{table}', [check_list_controller::class, 'save_check_list'])->name('save.check.list');  // show model search
     Route::post('/save-check-list-detail/{table}', [check_list_controller::class, 'save_check_list_detail'])->name('save.check.list.detail');  // show model search
@@ -59,9 +63,9 @@ Route::/* middleware('auth')-> */prefix('admin-dashboard')->group(function () {
 });
 
 Route::/* middleware('auth')-> */prefix('admin-dashboard/check-list')->group(function () {
+    
 
 
-   
     Route::get('/check-list', [admin_check_list_controller::class, 'check_list_search'])->name('admin.show.check.list');  // show model search
     Route::get('/line-type', [admin_check_list_controller::class, 'line_type_search'])->name('admin.line.type.search');  // show model search
     Route::get('/cong_doan', [admin_check_list_controller::class, 'cong_doan_search'])->name('admin.cong.doan.search');  // show model search
