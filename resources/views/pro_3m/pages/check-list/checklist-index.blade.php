@@ -82,6 +82,7 @@
                         <tr>
                             <th style="width:3%">STT</th>
                             <th style="width:7%">Machine</th>
+                            <th style="width:7%">Item check</th>
                             <th style="width:auto">Nội dung</th>
                             <th style="width:7%">Remark</th>
                             <th style="width:7%">Tình trạng</th>
@@ -95,7 +96,7 @@
 
 
 
-        <div class="card mb-4">
+        {{-- <div class="card mb-4">
             <div class="card-header py-3">
                 <h5 class="text-primary mx-3"><b><i class="icon-line-database" style="padding-right: 5px"></i>DATA CHECK
                         LIST PRO-3M</b>
@@ -201,15 +202,14 @@
 
             </div>
 
-        </div>
+        </div> --}}
         {{-- model show check list --}}
 
         <div class="modal" id="modal-show">
             <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="text-primary mx-3"><b><i class="icon-line-database"
-                                    style="padding-right: 5px"></i>DATA
+                        <h5 class="text-primary mx-3"><b><i class="icon-line-database" style="padding-right: 5px"></i>DATA
                                 CHECK
                                 LIST PRO-3M</b>
                         </h5>
@@ -291,12 +291,17 @@
                             value: "",
                             text: "---",
                         }));
-                       
+
+                        $('#Khung_gio').append($('<option>', {
+                            value: "",
+                            text: "---",
+                        }));
+
                         ID_machine_list = [];
                         $.each(response.machine, function(index, value) {
                             $('#Machine').append($('<option>', {
-                                value: value,
-                                text: value,
+                                value: value.id,
+                                text: value.Machine,
                             }));
                         });
                         $.each(response.line, function(index, value) {
@@ -311,9 +316,9 @@
                                 text: value.model,
                             }));
                         });
-                        $.each(response.list_ID_machine, function(index, value) {
-                            ID_machine_list.push(value.ID_machine);
-                        });
+                        // $.each(response.list_ID_machine, function(index, value) {
+                        //     ID_machine_list.push(value.ID_machine);
+                        // });
 
                         // $.each(response.item_check, function(index, value) {
                         //     $('#Checklist_item').append($('<option>', {
@@ -329,75 +334,89 @@
                         // });
 
 
-                        $("#ID_machine").autocomplete({
-                            source: ID_machine_list,
-                            minLength: 0, // Để hiển thị gợi ý ngay khi nhấp vào ô
-                            focus: function(event, ui) {
-                                event.preventDefault(); // Ngăn chặn việc điền tự động
-                            },
-                            select: function(event, ui) {
-                                $('#ID_machine').val(ui.item
-                                    .value); // Điền giá trị đã chọn vào input
-                                return false; // Ngăn chặn hành vi mặc định
-                            }
-                        }).focus(function() {
-                            $(this).autocomplete('search',
-                                ''); // Tìm kiếm tất cả gợi ý khi nhấp vào
-                        });
+                        // $("#ID_machine").autocomplete({
+                        //     source: ID_machine_list,
+                        //     minLength: 0, // Để hiển thị gợi ý ngay khi nhấp vào ô
+                        //     focus: function(event, ui) {
+                        //         event.preventDefault(); // Ngăn chặn việc điền tự động
+                        //     },
+                        //     select: function(event, ui) {
+                        //         $('#ID_machine').val(ui.item
+                        //             .value); // Điền giá trị đã chọn vào input
+                        //         return false; // Ngăn chặn hành vi mặc định
+                        //     }
+                        // }).focus(function() {
+                        //     $(this).autocomplete('search',
+                        //         ''); // Tìm kiếm tất cả gợi ý khi nhấp vào
+                        // });
 
 
                     }
                 });
 
             }
-            $('#ID_machine').on('blur', function() {
-                const inputValue = $(this).val();
+            // $('#ID_machine').on('blur', function() {
+            //     const inputValue = $(this).val();
 
-                // Kiểm tra xem giá trị có trong danh sách gợi ý không
-                if (!ID_machine_list.includes(inputValue)) {
-                    $('#error-message').text('ID máy không đúng')
-                        .show(); // Hiển thị thông báo lỗi
-                } else {
-                    $('#error-message').hide(); // Ẩn thông báo lỗi nếu giá trị hợp lệ
-                }
-            });
+            //     // Kiểm tra xem giá trị có trong danh sách gợi ý không
+            //     if (!ID_machine_list.includes(inputValue)) {
+            //         if (inputValue == "") {
+            //             $('#error-message').text('Vui lòng chọn ID máy cần check')
+            //                 .show(); // Hiển thị thông báo lỗi
+            //         } else {
+            //             $('#error-message').text('ID máy không đúng')
+            //                 .show(); // Hiển thị thông báo lỗi
+            //         }
+
+            //     } else {
+            //         $('#error-message').hide(); // Ẩn thông báo lỗi nếu giá trị hợp lệ
+            //     }
+            // });
 
             $('#Machine').on('change', function() {
-                var machine = $(this).val();
+                var machine_id = $(this).val();
+
                 $.ajax({
                     type: "GET",
                     url: "{{ route('item.checklist.search') }}",
                     data: {
-                        machine: machine,
+                        machine_id: machine_id,
+
                     },
                     success: function(response) {
                         ID_machine_list = [];
                         $('#ID_machine').empty();
                         $('#Checklist_item').empty();
                         $('#Khung_gio').empty();
+                        $('#table-check-list').DataTable().clear();
                         $('#table-check-list').DataTable().destroy();
                         $('#Checklist_item').append($('<option>', {
                             value: "",
                             text: "---",
                         }));
 
+                        $('#ID_machine').append($('<option>', {
+                            value: "",
+                            text: "---",
+                        }));
+
                         $.each(response.checklist_item, function(index, value) {
                             $('#Checklist_item').append($('<option>', {
-                                value: value,
-                                text: value,
+                                value: value.id,
+                                text: value.item_checklist,
                             }));
                         });
 
                         $.each(response.ID_machine, function(index, value) {
-                            ID_machine_list.push(value.ID_machine);
+                            ID_machine_list.push(value.Code_machine);
                         });
 
-                        $.each(response.khung_check, function(index, value) {
-                            $('#Khung_gio').append($('<option>', {
-                                value: value.id,
-                                text: value.khung_check,
-                            }));
-                        });
+                        // $.each(response.khung_check, function(index, value) {
+                        //     $('#Khung_gio').append($('<option>', {
+                        //         value: value.id,
+                        //         text: value.khung_check,
+                        //     }));
+                        // });
 
                         $("#ID_machine").autocomplete({
                             source: ID_machine_list,
@@ -422,13 +441,13 @@
 
             $('#Checklist_item').on('change', function() {
                 var item_check = $(this).val();
-                var machine = $('#Machine').val();
+                // var machine = $('#Machine').val();
                 $.ajax({
                     type: "GET",
                     url: '{{ route('khung.check.search') }}',
                     data: {
                         item_check: item_check,
-                        machine: machine,
+                        // machine: machine,
                     },
 
                     success: function(response) {
@@ -442,51 +461,52 @@
                         show_check_list();
                     }
                 });
-               
+
             });
 
 
             function show_check_list() {
-                var machine = $('#Machine').val();
+                // var machine = $('#Machine').val();
                 var item_check = $('#Checklist_item').val();
-                console.log(machine);
-                console.log(item_check);
+                // console.log(machine);
+                // console.log(item_check);
                 $.ajax({
                     type: "GET",
                     url: '{{ route('check.list.search') }}',
                     data: {
-                        machine: machine,
+                        // machine: machine,
                         item_check: item_check,
                     },
                     success: function(response) {
-                        console.log(response.data_check_list);
+                        console.log(response.data_checklist);
                         $('#table-check-list').DataTable().destroy();
                         var count = 0;
                         var data = [];
-                        $.each(response.data_check_list, function(index, value) {
+                        $.each(response.data_checklist, function(index, value) {
                             count++;
                             var status =
                                 '<select name = "status" id="' + value.id +
                                 '" class="form-select">\
-                                                         <option value = "OK">OK</option>\
-                                                       <option value = "NG">NG</option>\
-                                                       </select>';
+                                                                                         <option value = "OK">OK</option>\
+                                                                                       <option value = "NG">NG</option>\
+                                                                                       </select>';
                             var problem =
                                 '<input name="problem" type="text" id="' + value.id +
                                 '" class="form-control">';
                             var process =
                                 '<select name = "process" id="' + value.id +
                                 '"class="form-select">\
-                                                          <option value = "OK"></option>\
-                                                          <option value = "Complete">Complete</option>\
-                                                         <option value = "Pending">Pending</option>\
-                                                        <option value = "Improgress" >Improgress</option>\
-                                                        </select >';
+                                                                                          <option value = "OK"></option>\
+                                                                                          <option value = "Complete">Complete</option>\
+                                                                                         <option value = "Pending">Pending</option>\
+                                                                                        <option value = "Improgress" >Improgress</option>\
+                                                                                        </select >';
                             data.push([
                                 count,
                                 value.Machine,
+                                value.item_checklist,
                                 value.Hang_muc,
-                                value.titile,
+                                value.Chu_ky,
                                 status,
                                 problem,
                                 process
@@ -513,32 +533,30 @@
                 return dateconvert;
             }
 
+
             $(document).on('click', '#save-check-list', function(e) {
                 e.preventDefault();
                 var data = [];
                 var data2 = [];
-                var group = tab;
-                var check_list = $('#check_list option:selected').text();
-                var cong_doan = $('#cong_doan option:selected').text();
-                var line_type = $('#line_type option:selected').text();
-                var phan_loai = $('#phan_loai option:selected').text();
-                var line = $('#line option:selected').text();
-                var shifts = $('#shift option:selected').text();
-                var tinh_trang = $('#status option:selected').text();
-                var name = $('#gen').val() + ' - ' + $('#name').val();
-                var part = $('#part').val();
-                var problems_1 = "";
-                var status_1 = 'OK';
-                var process_1 = '';
-                var date = Convertdate($('#date').val());
-                var year = Convert_year($('#date').val());
-                var table_1 = table_result + year;
-                var table_2 = table_result_detail + year;
-                console.log(table_1);
-                console.log(table_2);
+                const currentDate = new Date();
+                const date = currentDate.toISOString().split('T')[0];
 
-                if (line == '---' || shifts == '---' || tinh_trang == '---' || phan_loai == '---' || name ==
-                    ' - ' || part == '' || $('#date').val() == 0) {
+                var ID_item_checklist = $('#Khung_gio option:selected').val();
+                var line = $('#Line option:selected').text();
+                var Model = $('#Model option:selected').text();
+                var Machine = $('#Machine option:selected').text();
+                var Khung_gio = $('#Khung_gio option:selected').text();
+                var ID_machine = $('#ID_machine').val();
+                var Checklist_item = $('#Checklist_item option:selected').text();
+                // var name =Binh ;
+                var status_1 = 'OK';
+                console.log(ID_item_checklist);
+                console.log(ID_machine);
+                console.log(date);
+
+
+                if (line == '---' || Model == '---' || Machine == '---' || ID_machine == '---' ||
+                    Checklist_item == ' - ' || Khung_gio == '' || $('#date').val() == 0) {
                     alert('Bạn điền thiếu thông tin');
                 } else {
                     $('#table-check-list').DataTable().rows().every(function() {
@@ -549,37 +567,28 @@
 
                         if (status == 'NG') {
                             status_1 = "NG";
-                            process_1 = process;
                         }
                     });
-                    var data3 = {
-                        groups: group,
-                        check_list: check_list,
-                        phan_loai: phan_loai,
-                        cong_doan: cong_doan,
-                        line_type: line_type,
-                        line: line,
-                        shifts: shifts,
-                        name: name,
-                        part: part,
-                        tinh_trang: tinh_trang,
+                    var data = {
+                        id_checklist: ID_item_checklist,
                         status: status_1,
-                        problem: problems_1,
-                        process: process_1,
                         date: date,
+                        ID_machine: ID_machine
                     }
 
                     $.ajax({
                         type: "POST",
                         url: "{{ route('save.check.list', ':table') }}".replace(':table',
-                            table_1),
+                            'checklist_result'),
                         dataType: 'json',
-                        data: data3,
+                        data: data,
                         success: function(response) {
                             if (response.status == 400) {
-                                alert("Checklist đã tồn tại")
+                                alert('Update plan check list');
+                                
                             } else {
                                 var id = response.id;
+                                console.log(id);
                                 $('#table-check-list').DataTable().rows().every(function() {
                                     var rowData = this.data();
                                     var problems = $(this.node()).find('input').val();
@@ -624,7 +633,11 @@
                         }
                     });
                 }
+
+
             });
+
+
 
             /*     js cho search checklist */
 

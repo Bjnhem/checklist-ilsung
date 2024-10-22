@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Machine extends Model
+class Checklist_result_detail extends Model
 {
     use HasFactory;
-    protected $table = 'Machine';
+    protected $table = 'checklist_result_detail';
     public $timestamps = true;
     protected $guarded = [];
 }

@@ -7,6 +7,7 @@ use Session;
 use App\Models\check_list;
 use App\Models\phan_loai;
 use App\Models\check_list_detail;
+use App\Models\Checklist_item;
 use App\Models\cong_doan;
 use App\Models\ftg_1_result;
 use App\Models\ftg_1_result_detail;
@@ -15,6 +16,7 @@ use App\Models\ftg_result;
 use App\Models\ftg_result_detail;
 use App\Models\line;
 use App\Models\line_type;
+use App\Models\Machine_list;
 use App\Models\master_check_list_line;
 use App\Models\nhan_vien_check_list;
 use App\Models\pad_master_line;
@@ -128,7 +130,7 @@ class admin_check_list_controller extends Controller
 
         $line_type_id = $request->input("id");
         $line = 'App\\Models\\' . $request->input("groups") . '_line';
-        $list1 =  $line ::where('id_cong_doan', $line_type_id)->get();
+        $list1 =  $line::where('id_cong_doan', $line_type_id)->get();
         $list2 = phan_loai::where('id_cong_doan', $line_type_id)->get();
         return response()->json(
             [
@@ -350,6 +352,60 @@ class admin_check_list_controller extends Controller
         }
     }
 
+    public function created_plan_checklist(Request $request)
+    {
+        $table_result = 'App\\Models\\checklist_result';
+        $date_form = $request->input('date');
+        if ($request->ajax()) {
+            if (class_exists($table_result)) {
+                $data = $table_result::where('Date_check', $date_form)
+                    ->pluck('Code_machine')->toArray();
+                $data = array_unique($data);
+
+                $data_check_list = Machine_list::whereNotIn('Code_machine', $data)->get();
+                $data_check_list_1 = [];
+                $id_count = $table_result::latest()->value('id');
+
+                foreach ($data_check_list as $item) {
+                    $Code_machine = $item->Code_machine;
+                    $Code_machine = $item->Code_machine;
+                    $Item_checklist = Checklist_item::where('Machine', $item->Machine)->get();
+                    foreach ($Item_checklist as $item_check) {
+                        $data_check_list_1[] = [
+                            'id' => $id_count,
+                            'id_item_checklist' => $item->id,
+                            'id_checklist' => $item->id_checklist,
+                            'Location' => $item->Location,
+                            'Model' => "All",
+                            'Machine' => $item->Machine,
+                            'Code_machine' => $item->Code_machine,
+                            'item_checklist' => $item_check->item_checklist,
+                            'Khung_check' => $item_check->Khung_check,
+                            'Shift' => $item_check->Shift,
+                            'PIC_check' => "EQM",
+                            'Status' => $item->Status,
+                            'Check_status' => 'Pending',
+                            'date' => $date_form,
+                        ];
+
+                    }
+                    $id_count++;
+                }
+
+                $table_result::insert($data_check_list_1);
+                return response()->json([
+                    'status' => 200,
+                    'count' => $data_check_list->count()
+                ]);
+            }
+            return response()->json([
+                'status' => 400,
+            ]);
+        }
+        return response()->json([
+            'status' => 400,
+        ]);
+    }
     public function save_check_list_historry(Request $request)
     {
         $table_result = 'App\\Models\\' .  $request->input('table');
@@ -389,8 +445,8 @@ class admin_check_list_controller extends Controller
 
                     if ($item->phan_loai == 'EQM') {
                         $nhan_vien = $nhan_vien_master->where('groups', $groups)
-                        ->where('phan_loai', $item->phan_loai)
-                        ->random();
+                            ->where('phan_loai', $item->phan_loai)
+                            ->random();
                         dd($nhan_vien);
 
                         // $nhan_vien = nhan_vien_check_list::where('groups', $groups)
@@ -398,9 +454,9 @@ class admin_check_list_controller extends Controller
                         //     ->inRandomOrder()->first();
                     } else {
                         $nhan_vien = $nhan_vien_master->where('groups', $groups)
-                        ->where('phan_loai', 'production')
-                        ->where('line_type', $item->line_type)
-                        ->random();
+                            ->where('phan_loai', 'production')
+                            ->where('line_type', $item->line_type)
+                            ->random();
                         // $nhan_vien = nhan_vien_check_list::where('groups', $groups)
                         //     ->where('phan_loai', 'production')
                         //     ->where('line_type', $item->line_type)
@@ -430,7 +486,7 @@ class admin_check_list_controller extends Controller
 
                     $id_phan_loai = $item->id_phan_loai;
 
-                  /*   $check_list_detail =  $check_list_master::where('id_phan_loai', $id_phan_loai)->get();
+                    /*   $check_list_detail =  $check_list_master::where('id_phan_loai', $id_phan_loai)->get();
                     foreach ($check_list_detail as $item_detail) {
                         $data_check_list_2[] = [
                             'id_check_list' => $id_count,
@@ -451,12 +507,11 @@ class admin_check_list_controller extends Controller
                             'date' => $date_form,
                         ];
                     } */
-                    
                 }
 
                 $table_result::insert($data_check_list_1);
-            /*     $table_result_detail::insert($data_check_list_2); */
-               
+                /*     $table_result_detail::insert($data_check_list_2); */
+
                 return response()->json([
                     'status' => 200,
                     'count' => $data_check_list->count()

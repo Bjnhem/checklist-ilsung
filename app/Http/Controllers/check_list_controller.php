@@ -6,8 +6,13 @@ use App\Models\check_list;
 use Session;
 use App\Models\check_list_detail;
 use App\Models\check_list_item;
+use App\Models\Checklist_item;
+use App\Models\Checklist_master;
+use App\Models\Checklist_result;
 use App\Models\line;
 use App\Models\Machine;
+use App\Models\Machine_list;
+use App\Models\Machine_master;
 use App\Models\Model_master;
 use App\Models\result_check_list;
 
@@ -48,47 +53,41 @@ class check_list_controller extends Controller
 
     public function check_list_masster(Request $request)
     {
-        $machine = Machine::select('Machine')->distinct()->pluck('Machine');
+        $machine = Machine_master::all();
         $line = line::all();
         $model = Model_master::all();
-        $machine_search = $machine->first();
-        $list_machine_id = Machine::where("Machine", $machine_search)->get();
-        $list_item_checklist = check_list_item::where('Machine', $machine_search)->select('item_check_list')->distinct()->pluck('item_check_list');
-        $khung_check = check_list_item::where("Machine", $machine_search)->where('item_check_list', $list_item_checklist->first())->get();
+        // $machine_search = $machine->first();
+        // $list_machine_id = Machine_list::where("Machine", $machine_search)->get();
+        // $list_item_checklist = Checklist_master::where('Machine', $machine_search)->select('item_checklist')->distinct()->pluck('item_checklist');
+        // $khung_check = Checklist_master::where("Machine", $machine_search)->where('item_checklist', $list_item_checklist->first())->get();
         return response()->json(
             [
                 'machine' => $machine,
                 'line' => $line,
                 'model' => $model,
-                'list_ID_machine' => $list_machine_id,
-                'item_check' =>  $list_item_checklist,
-                'khung_check' =>   $khung_check,
-
             ]
         );
     }
 
     public function Machine_ID_search(Request $request)
     {
-        $Machine = $request->input("machine");
-        $ID_Machine = Machine::where('Machine', $Machine)->get();
-        $list_item_checklist = check_list_item::where('Machine', $Machine)->select('item_check_list')->distinct()->pluck('item_check_list');
-        $item_search = $list_item_checklist->first();
-        $khung_check = check_list_item::where("Machine", $Machine)->where('item_check_list', $item_search)->get();
+        $Machine_id = $request->input("machine_id");
+        $ID_Machine = Machine_list::where('ID_machine', $Machine_id)->get();
+        $Machine = Machine_master::where('id', $Machine_id)->first();
+        $list_item_checklist = Checklist_master::where('Machine', $Machine->Machine)->get();
         return response()->json(
             [
                 'ID_machine' => $ID_Machine,
                 'checklist_item' => $list_item_checklist,
-                'khung_check' =>   $khung_check,
             ]
         );
     }
 
     public function Khung_check(Request $request)
     {
-        $ID_Machine =  $request->input("machine");
+
         $item_check = $request->input("item_check");
-        $khung_check = check_list_item::where("Machine", $ID_Machine)->where('item_check_list', $item_check)->get();
+        $khung_check = Checklist_item::where("ID_checklist", $item_check)->get();
         return response()->json(
             [
                 'khung_check' =>   $khung_check,
@@ -96,18 +95,61 @@ class check_list_controller extends Controller
         );
     }
 
-     public function check_list_detail(Request $request)
+    public function check_list_detail(Request $request)
     {
 
-        $machine = $request->input("machine");
+        // $machine = $request->input("machine");
         $item_check = $request->input("item_check");
-        $check_list_detail = check_list::where('machine', $machine)->where('item_check_list', $item_check)->get();
+        $check_list_detail = check_list::where('ID_checklist', $item_check)->get();
         return response()->json(
             [
-                'data_check_list' => $check_list_detail,
+                'data_checklist' => $check_list_detail,
             ]
         );
     }
+
+    public function save_check_list(Request $request, $table)
+    {
+        $id_item_checklist = $request->input('id_checklist');
+        $ID_Machine = $request->input('ID_machine');
+        $date = $request->input('date');
+        $table_result = 'App\\Models\\checklist_result';
+        $check = Checklist_result::where('ID_item_checklist', $id_item_checklist)
+            ->where('Date_check', $date)
+            ->where('Code_machine', $ID_Machine)
+            ->first();
+
+        if ($check) {
+            $check->Check_status = "Completed";
+            $check->Save();
+            $id_check_list =  $check->id;
+
+            return response()->json([
+                'id' =>  $id_check_list,
+                'status' => 200,
+            ]);
+        } else {
+
+            return response()->json([
+                'status' => 400,
+            ]);
+        }
+    }
+
+    public function save_check_list_detail(Request $request, $table)
+    {
+        $data = $request->all();
+        $table_result_detail = 'App\\Models\\' . $table;
+        foreach ($data as $item) {
+            $table_result_detail::create($item);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Register Successfully.'
+        ]);
+    }
+
 
     // public function line_type_search(Request $request)
     // {
@@ -122,7 +164,7 @@ class check_list_controller extends Controller
     //     );
     // }
 
-   
+
 
     // public function check_list_detail_edit(Request $request)
     // {
@@ -227,62 +269,7 @@ class check_list_controller extends Controller
         return abort(404);
     }
 
-    public function save_check_list(Request $request, $table)
-    {
-        $group = $request->input('groups');
-        $check_list = $request->input('check_list');
-        $cong_doan = $request->input('cong_doan');
-        $line_type = $request->input('line_type');
-        $line = $request->input('line');
-        $phan_loai = $request->input('phan_loai');
-        $shift = $request->input('shifts');
-        $date = $request->input('date');
-        $table_result = 'App\\Models\\' . $table;
-        $master_line = 'App\\Models\\' . $request->input('groups') . '_master_line';
 
-        $check = $table_result::where('groups', $group)
-            ->where('check_list', $check_list)
-            ->where('cong_doan', $cong_doan)
-            ->where('line_type', $line_type)
-            ->where('phan_loai', $phan_loai)
-            ->where('line', $line)
-            ->where('shifts', $shift)
-            ->where('date', $date)
-            ->first();
-
-        if ($check) {
-            return response()->json([
-                'status' => 400,
-            ]);
-        } else {
-            $data = $request->all();
-            $check_list_record = $table_result::create($data);
-            $check2 = $master_line::where('groups', $group)
-                ->where('check_list', $check_list)
-                ->where('line_type', $line_type)
-                ->where('cong_doan', $cong_doan)
-                ->where('phan_loai', $phan_loai)
-                ->where('line', $line)
-                ->where('shifts', $shift)
-                ->first();
-
-            if ($check2) {
-                $check_list_record->id_check_list_line = $check2->id;
-                $check_list_record->save();
-
-                $id_check_list = $check_list_record->id;
-
-                return response()->json([
-                    'id' =>  $id_check_list,
-                    'status' => 200,
-                ]);
-            } else {
-                return response()->json([
-                    'status' => 400,
-                ]);
-            }
-        }
-    }
 
 
 
@@ -304,19 +291,7 @@ class check_list_controller extends Controller
 
 
 
-    public function save_check_list_detail(Request $request, $table)
-    {
-        $data = $request->all();
-        $table_result_detail = 'App\\Models\\' . $table;
-        foreach ($data as $item) {
-            $table_result_detail::create($item);
-        }
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Register Successfully.'
-        ]);
-    }
 
     public function delete_row(Request $request)
     {
