@@ -365,16 +365,18 @@ class admin_check_list_controller extends Controller
                 $data_check_list = Machine_list::whereNotIn('Code_machine', $data)->get();
                 $data_check_list_1 = [];
                 $id_count = $table_result::latest()->value('id');
-
+                $count = $id_count;
                 foreach ($data_check_list as $item) {
                     $Code_machine = $item->Code_machine;
                     $Code_machine = $item->Code_machine;
                     $Item_checklist = Checklist_item::where('Machine', $item->Machine)->get();
                     foreach ($Item_checklist as $item_check) {
+
+                        $id_count++;
                         $data_check_list_1[] = [
                             'id' => $id_count,
-                            'id_item_checklist' => $item->id,
-                            'id_checklist' => $item->id_checklist,
+                            'ID_item_checklist' => $item_check->id,
+                            'ID_checklist' => $item_check->ID_checklist,
                             'Location' => $item->Location,
                             'Model' => "All",
                             'Machine' => $item->Machine,
@@ -385,17 +387,18 @@ class admin_check_list_controller extends Controller
                             'PIC_check' => "EQM",
                             'Status' => $item->Status,
                             'Check_status' => 'Pending',
-                            'date' => $date_form,
+                            'Remark' => '',
+                            'Date_check' => $date_form,
+                            'created_at' => now(), // Thêm dòng này
+                            'updated_at' => now(),
                         ];
-
                     }
-                    $id_count++;
                 }
 
                 $table_result::insert($data_check_list_1);
                 return response()->json([
                     'status' => 200,
-                    'count' => $data_check_list->count()
+                    'count' => $id_count - $count,
                 ]);
             }
             return response()->json([

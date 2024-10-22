@@ -80,6 +80,7 @@
             $(document).on('click', '#add-plan-checklist', function(e) {
                 e.preventDefault();
                 var date = Convertdate($('#date_form').val());
+                console.log(date);
                 if ($('#date_form').val() == 0) {
                     alert('Bạn điền thiếu thông tin');
                 } else {

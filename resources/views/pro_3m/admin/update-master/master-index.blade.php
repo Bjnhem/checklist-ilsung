@@ -4,23 +4,28 @@
     <div class="container">
         <ul id="myTab" class="nav nav-tabs boot-tabs mb-5">
             <li class="nav-item">
-                <button class="nav-link active" id="check-list-1" value="check_list" data-bs-toggle="tab"
+                <button class="nav-link active" id="check-list-1" value="Model_master" data-bs-toggle="tab"
                     data-bs-target="#check-list" type="button" role="tab" aria-controls="nav-disabled"
-                    aria-selected="false">Check-list</button>
+                    aria-selected="false">Model</button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" id="line-type-1" value="line_type" data-bs-toggle="tab" data-bs-target="#line-type"
-                    type="button" role="tab" aria-controls="nav-disabled" aria-selected="false">line-type</button>
+                <button class="nav-link" id="line-type-1" value="line" data-bs-toggle="tab" data-bs-target="#line-type"
+                    type="button" role="tab" aria-controls="nav-disabled" aria-selected="false">Line</button>
             </li>
-            <li class="nav-item"> <button class="nav-link" id="cong-doan-1" value="cong_doan" data-bs-toggle="tab"
+            <li class="nav-item"> <button class="nav-link" id="cong-doan-1" value="Machine_master" data-bs-toggle="tab"
                     data-bs-target="#study-post" type="button" role="tab" aria-controls="nav-home"
-                    aria-selected="true">Công Đoạn</button></li>
-            <li class="nav-item"> <button class="nav-link" id="phan-loai-1" value="phan_loai" data-bs-toggle="tab"
+                    aria-selected="true">Machine</button></li>
+            <li class="nav-item"> <button class="nav-link" id="phan-loai-1" value="Machine_list" data-bs-toggle="tab"
                     data-bs-target="#mind-post" type="button" role="tab" aria-controls="nav-profile"
-                    aria-selected="false">Phân Loại</button></li>
+                    aria-selected="false">machine list</button></li>
             <li class="nav-item">
-                <button class="nav-link" id="line-1" value="line" data-bs-toggle="tab" data-bs-target="#line1"
-                    type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Line</button>
+                <button class="nav-link" id="line-1" value="Checklist_item" data-bs-toggle="tab" data-bs-target="#line1"
+                    type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Item check</button>
+
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="line-1" value="Checklist_master" data-bs-toggle="tab" data-bs-target="#line1"
+                    type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Master checklist</button>
 
             </li>
             <li class="nav-item">
@@ -48,18 +53,7 @@
                                     <input type="text" name="check_list" id="check_list" class="form-control">
 
                                 </div>
-                                {{-- <div class="col-sm-2">
-                                        <span>Loại Line:</span>
-                                        <select name="line_type" id="line_type" class="form-select">
-
-                                        </select>
-                                    </div>
-                                   
-                                    <div class="col-sm-2">
-                                        <span>Phân Loại:</span>
-                                        <select name="phan_loai" id="phan_loai" class="form-select">
-                                        </select>
-                                    </div> --}}
+                                
                                 <div class="col-sm-2">
                                     <span>
                                         <br>

@@ -54,13 +54,14 @@ Route::/* middleware('auth')-> */prefix('admin-dashboard')->group(function () {
     Route::get('check-list-edit', [AdminController::class, 'index_edit'])->name('admin.checklist.edit');
     Route::get('check-list-pending', [AdminController::class, 'index_pending'])->name('admin.checklist.pending');
     Route::get('historry', [AdminController::class, 'index_historry'])->name('admin.checklist.historry');
+    Route::post('/add-plan-checklist', [admin_check_list_controller::class, 'created_plan_checklist'])->name('admin.add.plan.checklist'); 
+
 });
 
 Route::/* middleware('auth')-> */prefix('admin-dashboard/check-list')->group(function () {
 
 
-    Route::post('/add-plan-checklist', [admin_check_list_controller::class, 'created_plan_checklist'])->name('admin.add.plan.checklist'); 
-
+   
     Route::get('/check-list', [admin_check_list_controller::class, 'check_list_search'])->name('admin.show.check.list');  // show model search
     Route::get('/line-type', [admin_check_list_controller::class, 'line_type_search'])->name('admin.line.type.search');  // show model search
     Route::get('/cong_doan', [admin_check_list_controller::class, 'cong_doan_search'])->name('admin.cong.doan.search');  // show model search
