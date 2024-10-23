@@ -617,9 +617,9 @@
                 if (tables) {
                     $('#table_check_list_search').DataTable().destroy();
                 }
-                var line_search = $('#line_search option:selected').text();
+                var line_search = $('#Line_search option:selected').text();
                 var shift_search = $('#shift_search option:selected').text();
-                var date_form = Convertdate($('#date_form').val());
+                var date_form = ($('#date_form').val());
     
                 if ($('#date_form').val() == 0) {
                     alert('Vui lòng chọn thời gian kiểm tra');
@@ -629,25 +629,23 @@
                         url: "{{ route('check.list.overview') }}",
                         dataType: 'json',
                         data: {
-                            groups: tab,
-                            check_list: check_list_search,
-                            cong_doan: cong_doan_search,
-                            line_type: line_type_search,
-                            phan_loai: phan_loai_search,
                             line: line_search,
                             shift: shift_search,
                             date_form: date_form,
-                            table: table_result + year,
-                            groups: tab
+                           
                         },
                         success: function(users) {
                             var count = 0;
                             var data = [];
                             var colum = [];
                             var data;
+                            console.log(users.data);
+                            console.log(shift_search);
+                            console.log(date_form);
                             $.each(users.data, function(index, value) {
+                                
                                 count++;
-                                if (value.Check_status == "Pending") {
+                                if (value.Check_status != "Pending") {
                                     var view = '<button type="button" value="' + value
                                         .id_phan_loai +
                                         '" data-bs-toggle="modal" data-bs-target="#modal-show" class="btn btn-primary check editbtn btn-sm" id="' +
@@ -713,133 +711,7 @@
                 }
             });
 
-            // $(document).on('click', '#save-check-list', function(e) {
-            //     e.preventDefault();
-            //     var data1 = [];
-            //     var data2 = [];
-            //     var group = tab;
-            //     var check_list = $('#check_list option:selected').text();
-            //     var cong_doan = $('#cong_doan option:selected').text();
-            //     var line_type = $('#line_type option:selected').text();
-            //     var phan_loai = $('#phan_loai option:selected').text();
-            //     var line = $('#line option:selected').text();
-            //     var shifts = $('#shift option:selected').text();
-            //     var tinh_trang = $('#status option:selected').text();
-            //     var name = $('#gen').val() + ' - ' + $('#name').val();
-            //     var part = $('#part').val();
-            //     var problems_1 = "";
-            //     var status_1 = 'OK';
-            //     var process_1 = '';
-
-
-
-            //     var date = $('#date_check').val();
-            //     var d1 = date.split('-');
-            //     var year = '_' + d1[0] + '_' + d1[1];
-            //     var table_1 = table_result + year;
-            //     var table_2 = table_result_detail + year;
-            //     console.log(table_1);
-            //     console.log(table_2);
-
-            //     if (line == '---' || shifts == '---' || tinh_trang == '---' || phan_loai == '---' || name ==
-            //         ' - ' || part == '') {
-            //         alert('Bạn điền thiếu thông tin');
-            //     } else {
-            //         $('#table-check-list').DataTable().rows().every(function() {
-            //             var status = $(this.node()).find('select[name="status"] option:selected')
-            //                 .text();
-            //             var process = $(this.node()).find('select[name="process"] option:selected')
-            //                 .text();
-
-            //             if (status == 'NG') {
-            //                 status_1 = "NG";
-            //                 process_1 = process;
-            //             }
-            //         });
-            //         var data1 = {
-            //             id_check_list_line: id_master,
-            //             groups: group,
-            //             check_list: check_list,
-            //             phan_loai: phan_loai,
-            //             cong_doan: cong_doan,
-            //             line_type: line_type,
-            //             line: line,
-            //             shifts: shifts,
-            //             name: name,
-            //             part: part,
-            //             tinh_trang: tinh_trang,
-            //             status: status_1,
-            //             problem: problems_1,
-            //             process: process_1,
-            //             date: date
-            //         }
-            //         $.ajax({
-            //             type: "POST",
-            //             url: "{{ route('admin.save.check.list.pending', ':table') }}".replace(
-            //                 ':table', table_1),
-            //             dataType: 'json',
-            //             data: data1,
-            //             success: function(response) {
-            //                 if (response.status == 400) {
-            //                     alert("Checklist đã tồn tại")
-            //                 } else {
-            //                     var id = response.id;
-            //                     $('#table-check-list').DataTable().rows().every(function() {
-            //                         var rowData = this.data();
-            //                         var problems = $(this.node()).find('input').val();
-            //                         var status = $(this.node()).find(
-            //                                 'select[name="status"] option:selected')
-            //                             .text();
-            //                         var process = $(this.node()).find(
-            //                                 'select[name="process"] option:selected')
-            //                             .text();
-            //                         var newData = {
-            //                             id_check_list: id,
-            //                             groups: group,
-            //                             check_list: rowData[1],
-            //                             cong_doan: rowData[2],
-            //                             phan_loai: rowData[3],
-            //                             comment: rowData[4],
-            //                             line: line,
-            //                             line_type: line_type,
-            //                             shifts: shifts,
-            //                             name: name,
-            //                             part: part,
-            //                             tinh_trang: tinh_trang,
-            //                             status: status,
-            //                             problem: problems,
-            //                             process: process,
-            //                             date: date
-            //                         }
-            //                         data2.push(newData);
-            //                     })
-            //                     $.ajax({
-            //                         type: "POST",
-            //                         url: "{{ route('admin.save.check.list.detail', ':table') }}"
-            //                             .replace(':table', table_2),
-            //                         contentType: 'application/json',
-            //                         data: JSON.stringify(data2),
-            //                         success: function(users) {
-            //                             alert('save check-list Thành công');
-
-            //                             for (var i = rowSelected.length - 1; i >=
-            //                                 0; i--) {
-            //                                 tables.row(rowSelected[i]).remove();
-            //                             }
-            //                             tables.draw();
-
-            //                             $('#table_check_list_view').DataTable()
-            //                                 .clear().destroy();
-            //                             $('#table_check_list_view thead tr')
-            //                                 .remove();
-            //                             $('#modal-show').modal('hide');
-            //                         }
-            //                     });
-            //                 }
-            //             }
-            //         });
-            //     }
-            // });
+          
 
             $(document).on('click', '.check', function(e) {
                 e.preventDefault();
@@ -943,13 +815,7 @@
 
             });
 
-            function Convertdate(date) {
-
-                var data = date.split('/');
-                var dateconvert = data[2] + '-' + data[0] + '-' + data[1];
-                return dateconvert;
-            }
-
+         
 
             $(document).on('click', '#save-check-list', function(e) {
                 e.preventDefault();
@@ -1055,132 +921,9 @@
 
             /*     js cho search checklist */
 
-            function Convertdate(date) {
-                var data = date.split('/');
-                var dateconvert = data[2] + '-' + data[0] + '-' + data[1];
-                return dateconvert;
-            }
+           
 
-            function Convert_year(date) {
-                var data = date.split('/');
-                var dateconvert = '_' + data[2] + '_' + data[0];
-                return dateconvert;
-            }
-
-            function Convert_month(date) {
-                var data = date.split('/');
-                var dateconvert = data[0];
-                return dateconvert;
-            }
-
-            $(document).on('click', '#Search', function(e) {
-                e.preventDefault();
-                if (tables) {
-                    $('#table_check_list_search').DataTable().destroy();
-                }
-                var check_list_search = $('#check_list_search option:selected').text();
-                var phan_loai_search = $('#phan_loai_search option:selected').text();
-                var cong_doan_search = $('#cong_doan_search option:selected').text();
-                var line_type_search = $('#line_type_search option:selected').text();
-                var line_search = $('#line_search option:selected').text();
-                var shift_search = $('#shift_search option:selected').text();
-                var tinh_trang = $('#tinh_trang_search option:selected').text();
-                var status_search = $('#status_search option:selected').text();
-                var date_form = Convertdate($('#date_form').val());
-                var date_to = Convertdate($('#date_to').val());
-                var year = Convert_year($('#date_form').val());
-                var month_form = Convert_month($('#date_form').val());
-                var month_to = Convert_month($('#date_to').val());
-
-                if ($('#date_form').val() == 0 || $('#date_to').val() == 0) {
-                    alert('Vui lòng chọn thời gian kiểm tra');
-                } else {
-                    if (month_form != month_to) {
-                        alert('Thời gian kiểm tra vượt quá 1 tháng');
-                    } else {
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ route('search.check.list') }}",
-                            dataType: 'json',
-                            data: {
-                                check_list: check_list_search,
-                                cong_doan: cong_doan_search,
-                                line_type: line_type_search,
-                                phan_loai: phan_loai_search,
-                                line: line_search,
-                                shift: shift_search,
-                                tinh_trang: tinh_trang,
-                                status: status_search,
-                                date_form: date_form,
-                                date_to: date_to,
-                                table: table_result + year
-                            },
-                            success: function(users) {
-                                var data = [];
-                                $.each(users.data, function(index, value) {
-                                    var view = '<button type="button" value="' + value
-                                        .id +
-                                        '" data-bs-toggle="modal" data-bs-target="#modal-show" class="btn btn-primary editbtn btn-sm" id="view"><span class="icon-eye2"></span></button>';
-                                    data.push([
-                                        value.id,
-                                        value.id_check_list_line,
-                                        value.groups,
-                                        value.check_list,
-                                        value.cong_doan,
-                                        value.phan_loai,
-                                        value.line,
-                                        value.shifts,
-                                        value.name,
-                                        value.part,
-                                        value.status,
-                                        value.problem,
-                                        value.process,
-                                        value.tinh_trang,
-                                        value.date,
-                                        view,
-                                    ]);
-                                });
-
-                                var header =
-                                    '<thead class="table-success" style="text-align: center; vertical-align:middle">' +
-                                    '<tr style="text-align: center">' +
-                                    '<th style="width:3%;text-align: center">ID</th>' +
-                                    '<th style="width:3%;text-align: center">Line-type</th>' +
-                                    '<th style="width:3%;text-align: center">Group</th>' +
-                                    '<th style="width:6%;text-align: center">Check List</th>' +
-                                    '<th style="width:6%;text-align: center">Công đoạn</th>' +
-                                    '<th style="width:6%;text-align: center">Phân loại</th>' +
-                                    '<th scope="col" style="text-align: center">Line</th>' +
-                                    '<th scope="col" style="text-align: center">Shift</th>' +
-                                    '<th scope="col" style="text-align: center">name</th>' +
-                                    '<th scope="col" style="text-align: center">Part</th>' +
-                                    '<th scope="col" style="text-align: center">Tình trạng</th>' +
-                                    '<th scope="col" style="text-align: center">Vấn đề</th>' +
-                                    '<th scope="col" style="text-align: center">Tiến độ</th>' +
-                                    '<th scope="col" style="text-align: center">Status</th>' +
-                                    '<th style="width:7% ; text-align: center">Date</th>' +
-                                    '<th scope="col" style="text-align: center">view</th>' +
-                                    '</tr>'
-                                '</thead>'
-
-                                $('#table_check_list_search').html(header);
-                                tables = $('#table_check_list_search').DataTable({
-                                    data: data,
-                                    "info": true,
-                                    'ordering': false,
-                                    'autowidth': true,
-                                    "dom": 'Bfrtip',
-                                    /* select: {
-                                        style: 'multi',
-                                    }, */
-
-                                });
-                            }
-                        });
-
-                    }
-                }
-            });
+           
 
             $(document).on('click', '#Search_all', function(e) {
                 e.preventDefault();
@@ -1358,6 +1101,13 @@
                 $('#table_check_list_view thead tr').remove();
                 // $('#table_check_list_view').empty();
                 // $('#modal-show').modal('hide');
+            });
+
+            $(document).on('click', '#close-model', function(e) {
+                e.preventDefault();
+                $('#table_check_list').DataTable().clear().destroy();
+                $('#table_check_list thead tr').remove();
+                $('#modal-show').modal('hide');
             });
 
             function editTable(table_edit, table) {

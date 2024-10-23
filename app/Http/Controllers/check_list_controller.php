@@ -156,17 +156,17 @@ class check_list_controller extends Controller
     {
         
         $line = ($request->input('line') == '---') ? null : $request->input('line');
-        $shift = ($request->input('shift') == '---') ? null : $request->input('shift');
+        $shift = ($request->input('shift') == 'All') ? null : $request->input('shift');
         $date_form = $request->input('date_form');
         $table = 'App\\Models\\checklist_result';
-        $master_line = 'App\\Models\\' . $request->input('groups') . '_master_line';
+       
         if ($request->ajax()) {
             if (class_exists($table)) {
                 $data = $table::all();
                 $colum = array_keys($data->first()->getAttributes());
                 $colums = array_diff($colum, ['updated_at']);
                 $data = $table::select($colums)
-                    ->where('line', 'LIKE', '%' . $line . '%')
+                    ->where('Location', 'LIKE', '%' . $line . '%')
                     ->where('Shift', 'LIKE', '%' .  $shift . '%')
                     ->where('Date_check', $date_form)
                    ->get();
