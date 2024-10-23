@@ -61,21 +61,43 @@
                 <div class="sidebar-body">
                     <ul class="sidebar-body-menu">
                         <li>
-                            <a class="show-cat-btn" href="{{ route('home') }}" id="overview">
+                            <a class="show-cat-btn" href="{{ route('home') }}" id="Overview">
+                                <span class="icon-line-check-square" style="padding-right:5px"
+                                    aria-hidden="true"></span>
+                                Overview
+
+                            </a>
+                        </li>
+                        <li>
+                            <a class="show-cat-btn" href="{{ route('Check.checklist') }}" id="Checklist">
                                 <span class="icon-line-check-square" style="padding-right:5px"
                                     aria-hidden="true"></span>
                                 Checklist EQM
 
                             </a>
                         </li>
+                        
                         <li>
-                            <a class="show-cat-btn" href="{{ route('checklist.pending') }}" id="Checklist-Pending">
-                                <span class="icon-line-check-square" style="padding-right:5px"
-                                    aria-hidden="true"></span>
-                                Checklist-Pending
-
+                            <a class="show-cat-btn" href="{{ route('Plan.checklist') }}" id="Plan">
+                                <span class="icon-line-database" style="padding-right:5px" aria-hidden="true"></span>
+                                Tạo Plan Checklist
                             </a>
                         </li>
+
+                        <li>
+                            <a class="show-cat-btn" href="{{ route('Master.checklist') }}" id="Master">
+                                <span class="icon-line-database" style="padding-right:5px" aria-hidden="true"></span>
+                                Update Master
+                            </a>
+                        </li>
+                        <li>
+                            <a class="show-cat-btn" href="{{ route('user.checklist') }}" id="User">
+                                <span class="icon-line-database" style="padding-right:5px" aria-hidden="true"></span>
+                                User
+                            </a>
+                        </li>
+
+
 
 
                         {{--  <li>

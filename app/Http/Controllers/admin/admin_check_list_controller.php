@@ -364,25 +364,22 @@ class admin_check_list_controller extends Controller
 
                 $data_check_list = Machine_list::whereNotIn('Code_machine', $data)->get();
                 $data_check_list_1 = [];
-                $id_count = $table_result::latest()->value('id');
+                $id_count = $table_result::max('id');;
                 $count = $id_count;
                 foreach ($data_check_list as $item) {
-                    $Code_machine = $item->Code_machine;
-                    $Code_machine = $item->Code_machine;
                     $Item_checklist = Checklist_item::where('Machine', $item->Machine)->get();
                     foreach ($Item_checklist as $item_check) {
-
                         $id_count++;
                         $data_check_list_1[] = [
                             'id' => $id_count,
                             'ID_item_checklist' => $item_check->id,
                             'ID_checklist' => $item_check->ID_checklist,
-                            'Location' => $item->Location,
-                            'Model' => "All",
+                            'Locations' => $item->Locations,
+                            'Model' => "---",
                             'Machine' => $item->Machine,
                             'Code_machine' => $item->Code_machine,
                             'item_checklist' => $item_check->item_checklist,
-                            'Khung_check' => $item_check->Khung_check,
+                            'Khung_check' => $item_check->khung_check,
                             'Shift' => $item_check->Shift,
                             'PIC_check' => "EQM",
                             'Status' => $item->Status,

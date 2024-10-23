@@ -9,6 +9,7 @@ use App\Models\check_list_item;
 use App\Models\Checklist_item;
 use App\Models\Checklist_master;
 use App\Models\Checklist_result;
+use App\Models\Checklist_result_detail;
 use App\Models\line;
 use App\Models\Machine;
 use App\Models\Machine_list;
@@ -34,8 +35,29 @@ class check_list_controller extends Controller
 
     public function index()
     {
-        return view('pro_3m.pages.check-list.checklist-index');
+        return view('pro_3m.pages.check-list.Overview-checklist');
     }
+
+    public function index_checklist()
+    {
+        return view('pro_3m.pages.check-list.Check-checklist');
+    }
+    public function index_plan()
+    {
+        return view('pro_3m.pages.check-list.Plan-checklist');
+    }
+
+    public function index_master()
+    {
+        return view('pro_3m.pages.check-list.Master-checklist');
+    }
+
+    public function index_user()
+    {
+        return view('pro_3m.pages.check-list.User-checklist');
+    }
+
+
 
 
     public function admin()
@@ -111,21 +133,24 @@ class check_list_controller extends Controller
     public function save_check_list(Request $request, $table)
     {
         $id_item_checklist = $request->input('id_checklist');
-        $ID_Machine = $request->input('ID_machine');
-        $date = $request->input('date');
-        $table_result = 'App\\Models\\checklist_result';
-        $check = Checklist_result::where('ID_item_checklist', $id_item_checklist)
-            ->where('Date_check', $date)
-            ->where('Code_machine', $ID_Machine)
+        $Model = $request->input('Model');
+
+        $check = Checklist_result::where('id', $id_item_checklist)
             ->first();
+
+        // $check = Checklist_result::where('ID_item_checklist', $id_item_checklist)
+        //     ->where('Date_check', $date)
+        //     ->where('Code_machine', $ID_Machine)
+        //     ->first();
 
         if ($check) {
             $check->Check_status = "Completed";
+            $check->Model = $Model;
             $check->Save();
-            $id_check_list =  $check->id;
+            $id_checklist_detail =  $check->id;
 
             return response()->json([
-                'id' =>  $id_check_list,
+                'id' =>  $id_checklist_detail,
                 'status' => 200,
             ]);
         } else {
@@ -139,9 +164,8 @@ class check_list_controller extends Controller
     public function save_check_list_detail(Request $request, $table)
     {
         $data = $request->all();
-        $table_result_detail = 'App\\Models\\' . $table;
         foreach ($data as $item) {
-            $table_result_detail::create($item);
+            Checklist_result_detail::create($item);
         }
 
         return response()->json([
@@ -151,25 +175,28 @@ class check_list_controller extends Controller
     }
 
 
-    
+
     public function search_check_list_overview(Request $request)
     {
-        
+
         $line = ($request->input('line') == '---') ? null : $request->input('line');
         $shift = ($request->input('shift') == 'All') ? null : $request->input('shift');
+        $Check_status = ($request->input('Status') == 'All') ? null : $request->input('Status');
         $date_form = $request->input('date_form');
         $table = 'App\\Models\\checklist_result';
-       
+
         if ($request->ajax()) {
             if (class_exists($table)) {
                 $data = $table::all();
                 $colum = array_keys($data->first()->getAttributes());
                 $colums = array_diff($colum, ['updated_at']);
-                $data = $table::select($colums)
-                    ->where('Location', 'LIKE', '%' . $line . '%')
-                    ->where('Shift', 'LIKE', '%' .  $shift . '%')
+                $data = Checklist_result::where('Shift', 'LIKE', '%' .  $shift . '%')
+                    ->where('Locations', 'LIKE', '%' . $line . '%')
+                    ->where('Check_status', 'LIKE', '%' . $Check_status . '%')
                     ->where('Date_check', $date_form)
-                   ->get();
+                    ->orderBy('Check_status', "desc")
+                    ->get();
+
                 return response()->json([
                     'data' => $data,
                     'colums' => $colums,

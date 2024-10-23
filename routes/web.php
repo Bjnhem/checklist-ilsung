@@ -3,14 +3,11 @@
 use App\Http\Controllers\admin\admin_check_list_controller;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\DataTbaleController;
-use App\Http\Controllers\admin\Pages_Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 
-use App\Http\Controllers\Admin\TieuchuanController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\admin\master_data_controller;
-use App\Http\Controllers\Admin\Traning_Result_Controller;
 use App\Http\Controllers\check_list_controller;
 
 
@@ -19,7 +16,10 @@ use App\Http\Controllers\check_list_controller;
 Route::prefix('/')->group(function () {
 
     Route::get('', [check_list_controller::class, 'index'])->name('home');
-    Route::get('checklist-pending', [check_list_controller::class, 'index_pending'])->name('checklist.pending');
+    Route::get('checklist', [check_list_controller::class, 'index_checklist'])->name('Check.checklist');
+    Route::get('Plan-checklist', [check_list_controller::class, 'index_plan'])->name('Plan.checklist');
+    Route::get('Update-master-checklist', [check_list_controller::class, 'index_master'])->name('Master.checklist');
+    Route::get('User', [check_list_controller::class, 'index_user'])->name('user.checklist');
     Route::get('/change-language/{language}', [HomeController::class, 'changeLanguage'])->name('change-language'); // router change ngôn ngữ
 
     /*  Route đăng nhập tài khoản */
@@ -38,7 +38,7 @@ Route::prefix('check-list')->group(function () {
     
 
     Route::post('/check-list-overview', [check_list_controller::class, 'search_check_list_overview'])->name('check.list.overview');  // show model search
-
+ 
 
     Route::get('/check-list-show', [check_list_controller::class, 'check_list_detail'])->name('check.list.search');  // show model search
     Route::post('/save-check-list/{table}', [check_list_controller::class, 'save_check_list'])->name('save.check.list');  // show model search
