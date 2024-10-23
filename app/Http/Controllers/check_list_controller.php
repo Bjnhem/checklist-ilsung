@@ -166,29 +166,12 @@ class check_list_controller extends Controller
                 $colum = array_keys($data->first()->getAttributes());
                 $colums = array_diff($colum, ['updated_at']);
                 $data = $table::select($colums)
-                    ->where('groups', 'LIKE', '%' . $groups . '%')
-                    ->where('check_list', 'LIKE', '%' . $check_list . '%')
-                    ->where('cong_doan', 'LIKE', '%' . $cong_doan . '%')
-                    ->where('line_type', 'LIKE', '%' . $line_type . '%')
-                    ->where('phan_loai', 'LIKE', '%' . $phan_loai . '%')
                     ->where('line', 'LIKE', '%' . $line . '%')
-                    ->where('shifts', 'LIKE', '%' .  $shift . '%')
-                    ->where('date', $date_form)
-                    ->pluck('id_check_list_line')->toArray();
-                /*   ->get(); */
-                $data = array_unique($data);
-                $data_check_list = $master_line::whereNotIn('id', $data)
-                    ->where('groups', 'LIKE', '%' . $groups . '%')
-                    ->where('check_list', 'LIKE', '%' . $check_list . '%')
-                    ->where('cong_doan', 'LIKE', '%' . $cong_doan . '%')
-                    ->where('phan_loai', 'LIKE', '%' . $phan_loai . '%')
-                    ->where('line_type', 'LIKE', '%' . $line_type . '%')
-                    ->where('line', 'LIKE', '%' . $line . '%')
-                    ->where('shifts', 'LIKE', '%' .  $shift . '%')
-                    ->get();
-
+                    ->where('Shift', 'LIKE', '%' .  $shift . '%')
+                    ->where('Date_check', $date_form)
+                   ->get();
                 return response()->json([
-                    'data' => $data_check_list,
+                    'data' => $data,
                     'colums' => $colums,
                     'status' => 200,
                 ]);
