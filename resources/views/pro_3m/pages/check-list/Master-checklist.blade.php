@@ -349,7 +349,7 @@
 
                 /*  $('#model').val() = table; */
                 data_table_view(table);
-                localStorage.setItem('activeItem', 'User');
+                localStorage.setItem('activeItem', 'Master');
                 var activeItem = localStorage.getItem('activeItem');
                 let list = document.querySelectorAll(".sidebar-body-menu a");
                 list.forEach((item) => item.addEventListener('click', activeLink));

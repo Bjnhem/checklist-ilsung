@@ -35,6 +35,7 @@
 
     <link rel="stylesheet" href="{{ asset('vendor/laravel-filemanager/css/lfm.css') }}" />
        <link rel="stylesheet" href="{{ asset('smart-ver2/custom-admin.css') }}" />
+       <link rel="stylesheet" href="{{ asset('checklist-ilsung/overview.css') }}" />
 
 
     <base href="{{ env('APP_URL') }}">
@@ -62,7 +63,7 @@
                     <ul class="sidebar-body-menu">
                         <li>
                             <a class="show-cat-btn" href="{{ route('home') }}" id="Overview">
-                                <span class="icon-line-check-square" style="padding-right:5px"
+                                <span class="icon-home" style="padding-right:5px"
                                     aria-hidden="true"></span>
                                 Overview
 
@@ -92,7 +93,7 @@
                         </li>
                         <li>
                             <a class="show-cat-btn" href="{{ route('user.checklist') }}" id="User">
-                                <span class="icon-line-database" style="padding-right:5px" aria-hidden="true"></span>
+                                <span class="icon-line-users" style="padding-right:5px" aria-hidden="true"></span>
                                 User
                             </a>
                         </li>
@@ -290,14 +291,10 @@
     <script src="{{ asset('smart-ver2/js/components/datepicker.js') }}"></script>
     <script src="{{ asset('smart-ver2/js/components/select-boxes.js') }}"></script>
     <script src="{{ asset('smart-ver2/js/components/selectsplitter.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('checklist-ilsung/overview.css') }}" />
 
 
-    <script>
-        var route_prefix = "laravel-filemanager";
-        $('#lfm').filemanager('image', {
-            prefix: route_prefix
-        });
-    </script>
+
 
 
     @yield('admin-js')
@@ -305,11 +302,7 @@
     <script>
         $(document).ready(function() {
 
-            var route_prefix = "laravel-filemanager";
-            $('#lfm').filemanager('image', {
-                prefix: route_prefix
-            });
-
+           
             $('.component-datepicker.input-daterange').datepicker({
                 autoclose: true,
                 format: 'yyyy-mm-dd'

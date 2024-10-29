@@ -9,15 +9,16 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\admin\master_data_controller;
 use App\Http\Controllers\check_list_controller;
-
+use App\Http\Controllers\Plan_checklist;
 
 /*=======  Router home============= */
 
 Route::prefix('/')->group(function () {
 
     Route::get('', [check_list_controller::class, 'index'])->name('home');
+    Route::get('checklist-overview', [check_list_controller::class, 'overview_data'])->name('checklist.overview');
     Route::get('checklist', [check_list_controller::class, 'index_checklist'])->name('Check.checklist');
-    Route::get('Plan-checklist', [check_list_controller::class, 'index_plan'])->name('Plan.checklist');
+
     Route::get('Update-master-checklist', [check_list_controller::class, 'index_master'])->name('Master.checklist');
     Route::get('User', [check_list_controller::class, 'index_user'])->name('user.checklist');
     Route::get('/change-language/{language}', [HomeController::class, 'changeLanguage'])->name('change-language'); // router change ngôn ngữ
@@ -31,14 +32,21 @@ Route::prefix('/')->group(function () {
 });
 
 
+Route::prefix('Plan-checklist')->group(function () {
+    Route::get('', [Plan_checklist::class, 'index_plan'])->name('Plan.checklist');
+
+    Route::post('/check-list-plan', [check_list_controller::class, 'search_check_list_overview'])->name('check.list.overview');  // show model search 
+});
+
 Route::prefix('check-list')->group(function () {
+    Route::get('show/{line}', [check_list_controller::class, 'index_checklist_show'])->name('show.checklist');
     Route::get('/checklist-masster', [check_list_controller::class, 'check_list_masster'])->name('check.list.masster');  // show model search
     Route::get('/item-check', [check_list_controller::class, 'Machine_ID_search'])->name('item.checklist.search');  // show model search
     Route::get('/khung-gio-check', [check_list_controller::class, 'Khung_check'])->name('khung.check.search');  // show model search
-    
+
 
     Route::post('/check-list-overview', [check_list_controller::class, 'search_check_list_overview'])->name('check.list.overview');  // show model search
- 
+
 
     Route::get('/check-list-show', [check_list_controller::class, 'check_list_detail'])->name('check.list.search');  // show model search
     Route::post('/save-check-list/{table}', [check_list_controller::class, 'save_check_list'])->name('save.check.list');  // show model search
@@ -50,6 +58,8 @@ Route::prefix('check-list')->group(function () {
     Route::get('/delete-check-list', [check_list_controller::class, 'delete_row'])->name('check.list.delete');
 });
 
+
+
 /* update data table */
 Route::/* middleware('auth')-> */prefix('admin-dashboard')->group(function () {
     Route::get('', [AdminController::class, 'index'])->name('admin.index');
@@ -58,12 +68,11 @@ Route::/* middleware('auth')-> */prefix('admin-dashboard')->group(function () {
     Route::get('check-list-edit', [AdminController::class, 'index_edit'])->name('admin.checklist.edit');
     Route::get('check-list-pending', [AdminController::class, 'index_pending'])->name('admin.checklist.pending');
     Route::get('historry', [AdminController::class, 'index_historry'])->name('admin.checklist.historry');
-    Route::post('/add-plan-checklist', [admin_check_list_controller::class, 'created_plan_checklist'])->name('admin.add.plan.checklist'); 
-
+    Route::post('/add-plan-checklist', [admin_check_list_controller::class, 'created_plan_checklist'])->name('admin.add.plan.checklist');
 });
 
 Route::/* middleware('auth')-> */prefix('admin-dashboard/check-list')->group(function () {
-    
+
 
 
     Route::get('/check-list', [admin_check_list_controller::class, 'check_list_search'])->name('admin.show.check.list');  // show model search

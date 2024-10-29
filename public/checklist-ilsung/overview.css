@@ -1,0 +1,144 @@
+.demo {
+    padding: 20px 60px;
+    background: #00543a8c;
+}
+
+.main-wrapper {
+    position: relative;
+    width: 100%;
+    background-color: #d9d9d9;
+}
+
+.progress {
+    height: 40px;
+    background: #fff;
+    border-radius: 100px;
+    box-shadow: none;
+    margin-top: 20px;
+    position: relative;
+}
+
+.progress .progress-title {
+    width: 20%;
+    height: 100%;
+    background: #66666669;
+    border-radius: 100px 0 0 100px;
+    float: left;
+    margin: 0;
+    font-size: 16px;
+    color: #000;
+    font-weight: 700;
+    line-height: 40px;
+    letter-spacing: 1px;
+    text-align: center;
+    /* text-transform: uppercase; */
+    position: relative;
+}
+
+.progress .progress-title:after {
+    content: "";
+    border-left: 10px solid #fff;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    position: absolute;
+    top: 10px;
+    right: -10px;
+    z-index: 1;
+}
+
+.progress .progress-bar {
+    width: 80%;
+    background: #fff;
+    box-shadow: none;
+    position: relative;
+}
+
+.progress .progress-value {
+    height: 100%;
+    border-radius: 0 100px 100px 0;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 40px;
+    color: #fff;
+    animation: animate-positive 2s;
+}
+
+.progress.red .progress-value {
+    background: #ec4251;
+}
+
+.progress.green .progress-value {
+    background: #73cd21;
+}
+
+.progress.blue .progress-value {
+    background: #2e9ce0;
+}
+
+.progress.yellow .progress-value {
+    background: #eea921;
+}
+
+.progress-item {
+    cursor: pointer; /* Hiển thị con trỏ khi di chuột vào */
+    margin-bottom: 10px; /* Khoảng cách giữa các thẻ */
+}
+
+#tooltip {
+    /* Thiết lập kiểu dáng cho tooltip */
+    z-index: 1000; /* Đảm bảo tooltip ở trên cùng */
+}
+
+@keyframes animate-positive {
+    0% {
+        width: 0;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .progress .progress-title {
+        font-size: 12px;
+        letter-spacing: 0;
+    }
+}
+
+.white {
+    margin-bottom: 50px;
+}
+
+.sidebar-body-menu a {
+    font-size: 18px;
+    color: #afafaf;
+    ;
+    opacity: 1;
+}
+
+.sidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    background: #1D2B36 !important;
+
+    width: 253px;
+    padding: 20px 15px 37px 20px;
+    -webkit-transition: .5s all;
+    -o-transition: .5s all;
+    transition: .5s all;
+    min-height: 100vh;
+}
+
+.cat-sub-menu.visible a:hover, .sidebar-body-menu a.active, .sidebar-body-menu a.active::after, .sidebar-body-menu a:hover, .sidebar-body-menu a:hover::after {
+    opacity: 1;
+    color: greenyellow;
+}

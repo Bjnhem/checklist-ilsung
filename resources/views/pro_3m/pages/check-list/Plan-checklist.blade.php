@@ -48,9 +48,11 @@
             var table_2 = 'result_detail'
             var colum_table = [];
             var tables;
-            var tab = @json($view);
+            var currentDate = new Date();
+            var date = currentDate.toISOString().split('T')[0];
+            $('#date_form').val(date);
 
-            localStorage.setItem('activeItem', 'User');
+            localStorage.setItem('activeItem', 'Plan');
             var activeItem = localStorage.getItem('activeItem');
             let list = document.querySelectorAll(".sidebar-body-menu a");
             list.forEach((item) => item.addEventListener('click', activeLink));
@@ -83,11 +85,106 @@
                 return dateconvert;
             }
 
+            // Show_plan_checklist();
+
+            function Show_plan_checklist() {
+
+                if (tables) {
+                    $('#table_check_list_search').DataTable().destroy();
+                }
+                var line_search = "";
+                var shift_search = "";
+                var Status_search = "";
+                var date_form = ($('#date_form').val());
+                if ($('#date_form').val() == 0) {
+                    alert('Vui lòng chọn thời gian kiểm tra');
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('check.list.overview') }}",
+                        dataType: 'json',
+                        data: {
+                            line: line_search,
+                            shift: shift_search,
+                            date_form: date_form,
+                            Status: Status_search,
+                        },
+                        success: function(users) {
+                            var count = 0;
+                            var data = [];
+                            var colum = [];
+                            var data;
+                            console.log(users.data);
+                            $.each(users.data, function(index, value) {
+                                count++;
+                                if (value.Check_status != "Pending") {
+                                    var view = '<button type="button" value="' + value
+                                        .id +
+                                        '" data-bs-toggle="modal" data-bs-target="#modal-check" class="btn btn-primary view-show check editbtn btn-sm" id="' +
+                                        value.ID_checklist + '">View</button>' +
+                                        ' <input type="hidden" value="' + value.ID_checklist +
+                                        '" id="' + value.id + '">';
+                                } else {
+                                    var view = '<button type="button" value="' + value
+                                        .id +
+                                        '" data-bs-toggle="modal" data-bs-target="#modal-check" class="btn btn-danger view-check check editbtn btn-sm" id="' +
+                                        value.ID_checklist + '">Check</button>' +
+                                        '<input type="hidden" value ="' + value.ID_checklist +
+                                        '" id="' + value.id + '">';
+                                }
+                                data.push([
+                                    count,
+                                    value.Locations,
+                                    value.Model,
+                                    value.Machine,
+                                    value.Code_machine,
+                                    value.item_checklist,
+                                    value.Khung_check,
+                                    value.Shift,
+                                    value.Check_status,
+                                    value.Date_check,
+                                    view,
+                                ]);
+                            });
+
+                            var header =
+                                '<thead class="table-success" style="text-align: center; vertical-align:middle">' +
+                                '<tr style="text-align: center">' +
+                                '<th style="text-align: center">STT</th>' +
+                                '<th style="text-align: center">Line</th>' +
+                                '<th style="text-align: center">Model</th>' +
+                                '<th style="text-align: center">Machine</th>' +
+                                '<th style="text-align: center">Code QL</th>' +
+                                '<th style="text-align: center">Check List</th>' +
+                                '<th style="text-align: center">Khung check</th>' +
+                                '<th style="text-align: center">Shift</th>' +
+                                '<th style="text-align: center">Trạng thái</th>' +
+                                '<th style="text-align: center">Date</th>' +
+                                '<th style="text-align: center">Edit</th>' +
+                                '</tr>'
+                            '</thead>'
+
+                            $('#table_check_list_search').html(header);
+                            tables = $('#table_check_list_search').DataTable({
+                                data: data,
+                                "info": true,
+                                'ordering': false,
+                                'autowidth': true,
+                                // "dom": 'Bfrtip',
+                                select: {
+                                    style: 'single',
+                                },
+
+                            });
+                        }
+                    });
+                }
+            };
 
             $(document).on('click', '#add-plan-checklist', function(e) {
                 e.preventDefault();
-                var date = Convertdate($('#date_form').val());
-                console.log(date);
+                var date_created = $('#date_form').val();
+                console.log(date_created);
                 if ($('#date_form').val() == 0) {
                     alert('Bạn điền thiếu thông tin');
                 } else {

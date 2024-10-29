@@ -143,6 +143,7 @@
             var colum_table = [];
             var tables;
             var tables_check;
+            
             var table_edit;
             var table = 'result';
             var table_2 = 'result_detail'
