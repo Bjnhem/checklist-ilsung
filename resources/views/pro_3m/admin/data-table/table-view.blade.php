@@ -8,7 +8,7 @@
                         <form action="{{ route('table.update.data') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="input-group">
-                                <input type="hidden" name="id" value="{{ $table }}">
+                                <input type="hidden" name="id" id="table_name" value="{{ $table }}">
                                 <input class="form-control" type="file" name="csv_file" accept=".csv" id="file-upload">
                                 <button class="btn btn-success" type="submit"><i class="icon-line-upload"></i>
                                     <span class="hidden-xs">Upload</span></button>
@@ -193,9 +193,7 @@
             });
 
             $('#table-result-traning').on('draw.dt', function() {
-
                 editTable();
-
             });
         });
     </script>

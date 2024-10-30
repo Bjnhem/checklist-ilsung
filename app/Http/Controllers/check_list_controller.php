@@ -40,16 +40,17 @@ class check_list_controller extends Controller
 
     public function index_checklist()
     {
-        return view('pro_3m.pages.check-list.Check-checklist');
+
+        $line_search = 'Line 01';
+        return view('pro_3m.pages.check-list.Check-checklist', compact('line_search'));
     }
 
     public function index_checklist_show($line)
     {
-        // $line_search = $line;
-        return view('pro_3m.pages.check-list.Check-checklist');
+
+        $line_search = $line;
+        return view('pro_3m.pages.check-list.Check-checklist', compact('line_search'));
     }
-
-
 
     public function index_master()
     {
@@ -134,6 +135,18 @@ class check_list_controller extends Controller
         );
     }
 
+    public function check_list_edit_detail(Request $request)
+    {
+
+        $id_check_list = $request->input("id_checklist");
+        $check_list_detail = Checklist_result_detail::where('ID_checklist_result', $id_check_list)->get();
+        return response()->json(
+            [
+                'data_checklist' => $check_list_detail,
+            ]
+        );
+    }
+
     public function save_check_list(Request $request, $table)
     {
         $id_item_checklist = $request->input('id_checklist');
@@ -165,9 +178,11 @@ class check_list_controller extends Controller
         }
     }
 
-    public function save_check_list_detail(Request $request, $table)
+
+    public function update_check_list_detail(Request $request, $table)
     {
         $data = $request->all();
+        Checklist_result_detail::where("id_checklist_result", $table)->delete();
         foreach ($data as $item) {
             Checklist_result_detail::create($item);
         }
@@ -178,7 +193,19 @@ class check_list_controller extends Controller
         ]);
     }
 
+    public function save_check_list_detail(Request $request, $table)
+    {
+        $data = $request->all();
+        // Checklist_result_detail::where("id_checklist_result", $table)->delete();
+        foreach ($data as $item) {
+            Checklist_result_detail::create($item);
+        }
 
+        return response()->json([
+            'status' => 200,
+            'message' => 'Register Successfully.'
+        ]);
+    }
 
     public function search_check_list_overview(Request $request)
     {
@@ -305,6 +332,7 @@ class check_list_controller extends Controller
 
     {
         $shift = ($request->input('shift') == 'All') ? null : $request->input('shift');
+        $line = ($request->input('line') == '') ? null : $request->input('line');
         $date_form = $request->input('date_form');
         $progressData = Checklist_result::select(
             'Locations',
@@ -312,6 +340,7 @@ class check_list_controller extends Controller
             \DB::raw('SUM(CASE WHEN Check_status = "Completed" THEN 1 ELSE 0 END) as completed_count')
         )
             ->where('Shift', 'LIKE', '%' .  $shift . '%')
+            ->where('Locations', 'LIKE', '%' .  $line . '%')
             ->where('Date_check', $date_form)
             ->groupBy('Locations')
             ->get()
@@ -323,10 +352,6 @@ class check_list_controller extends Controller
 
         return response()->json($progressData);
     }
-
-
-
-
 
 
     // public function line_type_search(Request $request)
@@ -446,9 +471,6 @@ class check_list_controller extends Controller
         }
         return abort(404);
     }
-
-
-
 
 
     public function save_edit_check_list(Request $request, $table)

@@ -49,8 +49,10 @@ Route::prefix('check-list')->group(function () {
 
 
     Route::get('/check-list-show', [check_list_controller::class, 'check_list_detail'])->name('check.list.search');  // show model search
+    Route::get('/check-list-edit', [check_list_controller::class, 'check_list_edit_detail'])->name('check.list.edit.search');  // show model search
     Route::post('/save-check-list/{table}', [check_list_controller::class, 'save_check_list'])->name('save.check.list');  // show model search
     Route::post('/save-check-list-detail/{table}', [check_list_controller::class, 'save_check_list_detail'])->name('save.check.list.detail');  // show model search
+    Route::post('/update-check-list-detail/{table}', [check_list_controller::class, 'update_check_list_detail'])->name('update.check.list.detail');  // show model search
     Route::post('/search-check-list', [check_list_controller::class, 'search_check_list'])->name('search.check.list');  // show model search
     Route::post('/search-check-list-view', [check_list_controller::class, 'search_check_list_view'])->name('search.check.list.view');  // show model search
     Route::post('/edit-table/{model}', [check_list_controller::class, 'edit_table'])->name('check.list.edit.data');

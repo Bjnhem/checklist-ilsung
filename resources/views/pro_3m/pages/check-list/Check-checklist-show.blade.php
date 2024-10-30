@@ -9,10 +9,6 @@
                 </h5>
             </div>
             <div class="card-body">
-                <div class="row" id="progress-container-2">
-
-                </div>
-                <br>
                 <div class="row">
                     <div class="col-sm-3">
                         <span>Line:</span>
@@ -44,11 +40,9 @@
                             <option value="Pending" selected>Pending</option>
 
                         </select>
-                    </div>
+                    </div>  
                 </div>
                 <br>
-
-
                 <table id="table_check_list_search" class="table table-bordered table-hover"
                     style="width:100%;border-collapse:collapse;">
                 </table>
@@ -73,8 +67,6 @@
                     </div>
                     <div class="modal-footer mx-5">
                         <button type="button" id="save-check-list" class="btn btn-success">Save
-                        </button>
-                        <button type="button" id="update-check-list" class="btn btn-success">Update
                         </button>
                         <button type="button" class="btn btn-warning close close-model-checklist"
                             id="close-model">Close</button>
@@ -148,15 +140,12 @@
 @section('admin-js')
     <script>
         $(document).ready(function() {
-            var colum_table = [];
             var line_check = @json($line_search);
+            console.log(line_check);
             var tables;
-            var tables_check;
-            var table_edit;
             var table = 'result';
             var table_2 = 'result_detail'
-            var table_result = table;
-            var table_result_detail = table_2;
+            // var tables_check;
             var ID_machine_list = [];
             var shift;
             var currentDate = new Date();
@@ -186,8 +175,6 @@
             show_master_check();
             show_master_status();
 
-
-
             function show_master_status() {
                 $.ajax({
                     type: "GET",
@@ -202,9 +189,10 @@
                             }));
                         });
 
-                        $('#Line_search option:selected').text(line_check);
+                        $('#Line_search option').text(line_check);
+                        $('#Line_search').prop('disabled', true);
+                   
                         search();
-                        show_overview();
 
 
                     }
@@ -291,196 +279,31 @@
 
             }
 
-            function show_model_check() {
-                $.ajax({
-                    type: "GET",
-                    url: "{{ route('check.list.masster') }}",
-                    dataType: "json",
-                    success: function(response) {
-
-                        $('#Model').empty();
-                        $('#Model').append($('<option>', {
-                            value: "",
-                            text: "---",
-                        }));
-                        $.each(response.model, function(index, value) {
-                            $('#Model').append($('<option>', {
-                                value: value.id,
-                                text: value.model,
-                            }));
-                        });
-                    }
-                });
-
-            }
-
-            function show_overview() {
-                $('#progress-container-2').html("");
-                var shift_search = $('#shift_search option:selected').text();
-                var date_form = ($('#date_form').val());
-                var line = $('#Line_search option:selected').text();
-                $.ajax({
-                    url: "{{ route('checklist.overview') }}",
-                    method: 'GET',
-
-                    dataType: "json",
-                    data: {
-                        shift: shift_search,
-                        date_form: date_form,
-                        line: line
-                    },
-                    success: function(data) {
-                        data.forEach(item => {
-                            console.log(item.Locations);
-                            console.log(item.completion_percentage);
-                            createProgressBar(item.Locations, item.completion_percentage);
-                        });
-                    },
-                    error: function(error) {
-                        console.error('Error fetching data:', error);
-                    }
-                });
-
-            }
-
-
-            $('#Machine').on('change', function() {
-                var machine_id = $(this).val();
-
-                $.ajax({
-                    type: "GET",
-                    url: "{{ route('item.checklist.search') }}",
-                    data: {
-                        machine_id: machine_id,
-
-                    },
-                    success: function(response) {
-                        ID_machine_list = [];
-                        $('#ID_machine').empty();
-                        $('#Checklist_item').empty();
-                        $('#Khung_gio').empty();
-                        $('#table-check-list').DataTable().clear();
-                        $('#table-check-list').DataTable().destroy();
-                        $('#Checklist_item').append($('<option>', {
-                            value: "",
-                            text: "---",
-                        }));
-
-                        $('#ID_machine').append($('<option>', {
-                            value: "",
-                            text: "---",
-                        }));
-
-                        $.each(response.checklist_item, function(index, value) {
-                            $('#Checklist_item').append($('<option>', {
-                                value: value.id,
-                                text: value.item_checklist,
-                            }));
-                        });
-
-                        $.each(response.ID_machine, function(index, value) {
-                            ID_machine_list.push(value.Code_machine);
-                        });
-
-                        // $.each(response.khung_check, function(index, value) {
-                        //     $('#Khung_gio').append($('<option>', {
-                        //         value: value.id,
-                        //         text: value.khung_check,
-                        //     }));
-                        // });
-
-                        $("#ID_machine").autocomplete({
-                            source: ID_machine_list,
-                            minLength: 0, // Để hiển thị gợi ý ngay khi nhấp vào ô
-                            focus: function(event, ui) {
-                                event
-                                    .preventDefault(); // Ngăn chặn việc điền tự động
-                            },
-                            select: function(event, ui) {
-                                $('#ID_machine').val(ui.item
-                                    .value); // Điền giá trị đã chọn vào input
-                                return false; // Ngăn chặn hành vi mặc định
-                            }
-                        }).focus(function() {
-                            $(this).autocomplete('search',
-                                ''); // Tìm kiếm tất cả gợi ý khi nhấp vào
-                        });
-                    }
-                });
-
-            });
-
-            $('#Checklist_item').on('change', function() {
-                var item_check = $(this).val();
-                // var machine = $('#Machine').val();
-                $.ajax({
-                    type: "GET",
-                    url: '{{ route('khung.check.search') }}',
-                    data: {
-                        item_check: item_check,
-                        // machine: machine,
-                    },
-
-                    success: function(response) {
-                        $('#Khung_gio').empty();
-                        $.each(response.khung_check, function(index, value) {
-                            $('#Khung_gio').append($('<option>', {
-                                value: value.id,
-                                text: value.khung_check,
-                            }));
-                        });
-                        var id_checklist = $('#Checklist_item').val();
-                        show_check_list(id_checklist);
-                    }
-                });
-
-            });
+          
 
 
             $('#Line_search').on('change', function(e) {
                 e.preventDefault();
                 search();
-                show_overview()
 
             });
             $('#Shift_search').on('change', function(e) {
                 e.preventDefault();
                 search();
-                show_overview()
 
             });
 
             $('#date_form').on('change', function(e) {
                 e.preventDefault();
                 search();
-                show_overview()
 
             });
             $('#Status_search').on('change', function(e) {
                 e.preventDefault();
                 search();
-                show_overview()
 
             });
 
-            function createProgressBar(line, completion) {
-                const progressContainer = $('#progress-container-2');
-                const progressCol = $('<div>').addClass('col-xl-8 col-sm-8');
-                const progressDiv = $('<div>').addClass('progress').attr('data-line', line);
-                const progressBar = $('<div>').addClass('progress-bar').css({
-                    width: `${completion}%`,
-                    background: '#25babc'
-                });
-
-                const progressValue = $('<div>').addClass('progress-value').html(`<span>${completion}</span>%`);
-                const progressTitle = $('<div>').addClass('progressbar-title').html(line);
-
-                progressBar.append(progressValue).append(progressTitle);
-                progressDiv.append(progressBar);
-                progressCol.append(progressDiv);
-                progressContainer.append(progressCol);
-
-            }
 
             function show_check_list(ID_checklist) {
                 console.log(ID_checklist);
@@ -500,95 +323,26 @@
                             var status =
                                 '<select name = "status" id="' + value.id +
                                 '" class="form-select">\
-                                                                                                                                                                                                                                                                                                             <option value = "OK">OK</option>\
-                                                                                                                                                                                                                                                                                                           <option value = "NG">NG</option>\
-                                                                                                                                                                                                                                                                                                           </select>';
+                                                                                                                                                                                                                                                             <option value = "OK">OK</option>\
+                                                                                                                                                                                                                                                           <option value = "NG">NG</option>\
+                                                                                                                                                                                                                                                           </select>';
                             var problem =
                                 '<input name="problem" type="text" id="' + value.id +
                                 '" class="form-control">';
                             var process =
                                 '<select name = "process" id="' + value.id +
                                 '"class="form-select">\
-                                                                                                                                                                                                                                                                                                              <option value = "OK"></option>\
-                                                                                                                                                                                                                                                                                                              <option value = "Complete">Complete</option>\
-                                                                                                                                                                                                                                                                                                             <option value = "Pending">Pending</option>\
-                                                                                                                                                                                                                                                                                                            <option value = "Improgress" >Improgress</option>\
-                                                                                                                                                                                                                                                                                                            </select >';
+                                                                                                                                                                                                                                                              <option value = "OK"></option>\
+                                                                                                                                                                                                                                                              <option value = "Complete">Complete</option>\
+                                                                                                                                                                                                                                                             <option value = "Pending">Pending</option>\
+                                                                                                                                                                                                                                                            <option value = "Improgress" >Improgress</option>\
+                                                                                                                                                                                                                                                            </select >';
                             data.push([
                                 count,
                                 value.Machine,
                                 value.item_checklist,
                                 value.Hang_muc,
                                 value.Chu_ky,
-                                status,
-                                problem,
-                                process
-                            ]);
-                        });
-                        $('#table-check-list').DataTable().destroy();
-                        $('#table-check-list').DataTable({
-                            data: data,
-                            "info": false,
-                            'ordering': false,
-                            'searching': false,
-                            "lengthMenu": [
-                                [-1],
-                                ["Show all"]
-                            ]
-                        });
-
-                    }
-                });
-            }
-
-            function show_check_list_edit(ID_checklist) {
-                console.log(ID_checklist);
-                $.ajax({
-                    type: "GET",
-                    url: '{{ route('check.list.edit.search') }}',
-                    data: {
-                        id_checklist: ID_checklist,
-                    },
-                    success: function(response) {
-                        console.log(response.data_checklist);
-                        $('#table-check-list').DataTable().destroy();
-                        var count = 0;
-                        var data = [];
-                        $.each(response.data_checklist, function(index, value) {
-                            count++;
-                            if (value.Check_status == "OK")
-                                var status =
-                                    '<select name = "status" id="' + value.id +
-                                    '" class="form-select">\
-                                                                 <option value = "OK" selected>OK</option>\
-                                                                <option value = "NG">NG</option>\
-                                                                 </select>';
-
-                            else {
-                                var status =
-                                    '<select name = "status" id="' + value.id +
-                                    '" class="form-select">\
-                                                                 <option value = "OK">OK</option>\
-                                                                <option value = "NG" selected>NG</option>\
-                                                                 </select>';
-                            }
-                            var problem =
-                                '<input name="problem" type="text" id="' + value.id +
-                                '" class="form-control">';
-                            var process =
-                                '<select name = "process" id="' + value.id +
-                                '"class="form-select">\
-                                                                                                                                                                                                                                                                                                              <option value = "OK"></option>\
-                                                                                                                                                                                                                                                                                                              <option value = "Complete">Complete</option>\
-                                                                                                                                                                                                                                                                                                             <option value = "Pending">Pending</option>\
-                                                                                                                                                                                                                                                                                                            <option value = "Improgress" >Improgress</option>\
-                                                                                                                                                                                                                                                                                                            </select >';
-                            data.push([
-                                count,
-                                value.Machine,
-                                value.item_checklist,
-                                value.Hang_muc,
-                                value.Khung_check,
                                 status,
                                 problem,
                                 process
@@ -742,42 +496,16 @@
                                 if (value.Check_status != "Pending") {
                                     var view = '<button type="button" value="' + value
                                         .id +
-                                        '" data-bs-toggle="modal" data-bs-target="#modal-check" class="btn btn-primary  view-check check editbtn btn-sm" id="' +
-                                        value.ID_checklist + '">Check</button>' +
-                                        '<input type="hidden" value ="' + value.ID_checklist +
-                                        '" id="' + value.id + '">' +
-
-                                        '<button disabled type="button" value="' + value
-                                        .id +
-                                        '" data-bs-toggle="modal" data-bs-target="#modal-check" class="btn btn-warning view-edit check editbtn btn-sm" id="' +
-                                        value.ID_checklist + '">Edit</button>' +
-                                        ' <input type="hidden" value="' + value.ID_checklist +
-                                        '" id="' + value.id + '">' +
-                                        '<button disabled type="button" value="' + value
-                                        .id +
-                                        '" data-bs-toggle="modal" data-bs-target="#modal-delete" class="btn btn-danger view-delete check editbtn btn-sm" id="' +
-                                        value.ID_checklist + '">Delete</button>' +
+                                        '" data-bs-toggle="modal" data-bs-target="#modal-check" class="btn btn-primary view-show check editbtn btn-sm" id="' +
+                                        value.ID_checklist + '">View</button>' +
                                         ' <input type="hidden" value="' + value.ID_checklist +
                                         '" id="' + value.id + '">';
                                 } else {
-                                    var view = '<button disabled type="button" value="' + value
+                                    var view = '<button type="button" value="' + value
                                         .id +
-                                        '" data-bs-toggle="modal" data-bs-target="#modal-check" class="btn btn-primary  view-check check editbtn btn-sm" id="' +
+                                        '" data-bs-toggle="modal" data-bs-target="#modal-check" class="btn btn-danger view-check check editbtn btn-sm" id="' +
                                         value.ID_checklist + '">Check</button>' +
                                         '<input type="hidden" value ="' + value.ID_checklist +
-                                        '" id="' + value.id + '">' +
-
-                                        '<button type="button" value="' + value
-                                        .id +
-                                        '" data-bs-toggle="modal" data-bs-target="#modal-check" class="btn btn-warning view-edit check editbtn btn-sm" id="' +
-                                        value.ID_checklist + '">Edit</button>' +
-                                        ' <input type="hidden" value="' + value.ID_checklist +
-                                        '" id="' + value.id + '">' +
-                                        '<button type="button" value="' + value
-                                        .id +
-                                        '" data-bs-toggle="modal" data-bs-target="#modal-delete" class="btn btn-danger view-delete check editbtn btn-sm" id="' +
-                                        value.ID_checklist + '">Delete</button>' +
-                                        ' <input type="hidden" value="' + value.ID_checklist +
                                         '" id="' + value.id + '">';
                                 }
                                 data.push([
@@ -791,7 +519,7 @@
                                     value.Shift,
                                     value.Check_status,
                                     value.Date_check,
-                                    view ,
+                                    view,
                                 ]);
                             });
 
@@ -832,11 +560,8 @@
             var id_checklist_detail = 0;
             $(document).on('click', '.view-check', function(e) {
                 e.preventDefault();
-                // show_model_check();
-                const button1 = document.getElementById('save-check-list');
-                button1.style.display = 'unset'; // Ẩn button
-                const button2 = document.getElementById('update-check-list');
-                button2.style.display = 'none'; // Ẩn button
+                const button = document.getElementById('save-check-list');
+                button.style.display = 'show'; // Ẩn button
                 id_checklist_detail = $(this).val();
                 id_checklist = this.id;
 
@@ -851,7 +576,7 @@
                     $('#Khung_gio option').text(rowData[6]);
                     date = rowData[9];
                     shift = rowData[7];
-                    $('#Model option:selected').filter(function() {
+                    $('#Model option').filter(function() {
                         return $(this).text() === rowData[2];
                     }).prop('selected', true);
 
@@ -868,12 +593,10 @@
 
             });
 
-            $(document).on('click', '.view-edit', function(e) {
+            $(document).on('click', '.view-show', function(e) {
                 e.preventDefault();
-                const button1 = document.getElementById('save-check-list');
-                button1.style.display = 'none'; // Ẩn button
-                const button2 = document.getElementById('update-check-list');
-                button2.style.display = 'unset'; // Ẩn button
+                const button = document.getElementById('save-check-list');
+                button.style.display = 'none'; // Ẩn button
                 id_checklist_detail = $(this).val();
                 id_checklist = this.id;
 
@@ -886,15 +609,14 @@
                     $('#line option').text(rowData[1]);
                     $('#Checklist_item option').text(rowData[5]);
                     $('#Khung_gio option').text(rowData[6]);
-                    $('#Model option:selected').text(rowData[2]);
                     date = rowData[9];
                     shift = rowData[7];
 
-                    $('#Model option:selected').filter(function() {
+                    $('#Model option').filter(function() {
                         return $(this).text() === rowData[2];
                     }).prop('selected', true);
 
-                    $('#Model').prop('disabled', false);
+                    $('#Model').prop('disabled', true);
                     $('#Machine').prop('disabled', true);
                     $('#ID_machine').prop('disabled', true);
                     $('#Line').prop('disabled', true);
@@ -903,195 +625,13 @@
                 }
 
 
-                show_check_list_edit(id_checklist_detail)
+                show_check_list(id_checklist)
 
             });
 
-            // $(document).on('click', '.check', function(e) {
-            //     e.preventDefault();
-            //     var check_list_search = $(this).val();
-            //     id_master = this.id;
-            //     var date = $('#date_check_' + id_master).val();
-            //     rowSelected = tables.rows('.selected').indexes();
-
-            //     $.ajax({
-            //         type: "GET",
-            //         url: '{{ route('admin.check.list.search.overview') }}',
-            //         data: {
-            //             id: check_list_search,
-            //             id_master: id_master,
-            //         },
-            //         success: function(response) {
-            //             $('#table-check-list').DataTable().destroy();
-            //             var count = 0;
-            //             var data = [];
-            //             var master = response.data_master;
-            //             $.each(master, function(index, value) {
-            //                 $('#check_list').empty();
-            //                 $('#line_type').empty();
-            //                 $('#cong_doan').empty();
-            //                 $('#phan_loai').empty();
-            //                 $('#line').empty();
-            //                 $('#shifts').empty();
-
-            //                 $('#check_list').append($('<option>', {
-            //                     value: value.id,
-            //                     text: value.check_list,
-            //                 }));
-            //                 $('#line_type').append($('<option>', {
-            //                     value: value.id,
-            //                     text: value.line_type,
-            //                 }));
-            //                 $('#cong_doan').append($('<option>', {
-            //                     value: value.id,
-            //                     text: value.cong_doan,
-            //                 }));
-            //                 $('#phan_loai').append($('<option>', {
-            //                     value: value.id,
-            //                     text: value.phan_loai,
-            //                 }));
-            //                 $('#line').append($('<option>', {
-            //                     value: value.id,
-            //                     text: value.line,
-            //                 }));
-            //                 $('#shifts').append($('<option>', {
-            //                     value: value.id,
-            //                     text: value.shifts,
-            //                 }));
-            //             });
-            //             $('#date_check').val(date);
-
-            //             $.each(response.data_check_list, function(index, value) {
-            //                 count++;
-
-            //                 var status =
-            //                     '<select name = "status" id="' + value.id +
-            //                     '" class="form-control">\
-            //                                                                                                                                                                                  <option value = "OK">OK</option>\
-            //                                                                                                                                                                                  <option value = "NG">NG</option>\
-            //                                                                                                                                                                                  </select>';
-
-            //                 var problem =
-            //                     '<input name="problem" type="text" id="' + value.id +
-            //                     '" class="form-control">';
-            //                 var process =
-            //                     '<select name = "process" id="' + value.id +
-            //                     '"class="form-select ">\
-            //                                                                                                                                                                                  <option value = "OK"></option>\
-            //                                                                                                                                                                                  <option value = "Complete">Complete</option>\
-            //                                                                                                                                                                                  <option value = "Pending">Pending</option>\
-            //                                                                                                                                                                                 <option value = "Improgress" >Improgress</option>\
-            //                                                                                                                                                                                 </select >';
-
-            //                 data.push([
-            //                     count,
-            //                     $('#check_list option:selected').text(),
-            //                     $('#cong_doan option:selected').text(),
-            //                     $('#phan_loai option:selected').text(),
-            //                     value.comment,
-            //                     status,
-            //                     problem,
-            //                     process
-            //                 ]);
-            //             });
-            //             $('#table-check-list').DataTable().destroy();
-            //             $('#table-check-list').DataTable({
-            //                 data: data,
-            //                 "info": false,
-            //                 'ordering': false,
-            //                 'searching': false,
-            //             });
-
-            //         }
-            //     });
-
-            // });
+            
 
             $(document).on('click', '#save-check-list', function(e) {
-                e.preventDefault();
-                var data = [];
-                var data2 = [];
-                var line = $('#Line option:selected').text();
-                var Model = $('#Model option:selected').text();
-                var Machine = $('#Machine option:selected').text();
-                var Khung_gio = $('#Khung_gio option:selected').text();
-                var ID_machine = $('#ID_machine').val();
-                var Checklist_item = $('#Checklist_item option:selected').text();
-                // var name =Binh ;
-                var status_1 = 'OK';
-
-                if ($('#Model option:selected').text() == "---") {
-                    alert("vui lòng chọn model nếu không có thì chọn COMMON");
-                } else {
-
-                    var data = {
-                        id_checklist: id_checklist_detail,
-                        Model: Model,
-                        date: date,
-                        ID_machine: ID_machine
-                    }
-
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('save.check.list', ':table') }}".replace(':table',
-                            'checklist_result'),
-                        dataType: 'json',
-                        data: data,
-                        success: function(response) {
-                            if (response.status == 400) {
-                                alert('Update plan check list');
-
-                            } else {
-                                var id = response.id;
-                                console.log(id);
-                                $('#table-check-list').DataTable().rows().every(function() {
-                                    var rowData = this.data();
-                                    var problems = $(this.node()).find('input').val();
-                                    var status = $(this.node()).find(
-                                            'select[name="status"] option:selected')
-                                        .text();
-                                    var process = $(this.node()).find(
-                                            'select[name="process"] option:selected')
-                                        .text();
-                                    var newData = {
-                                        ID_checklist_result: id,
-                                        Locations: line,
-                                        Model: Model,
-                                        ID_item_checklist: "1",
-                                        Machine: Machine,
-                                        Hang_muc: rowData[3],
-                                        item_checklist: Checklist_item,
-                                        Khung_check: Khung_gio,
-                                        Shift: shift,
-                                        Code_machine: ID_machine,
-                                        Check_status: status,
-                                        Status: problems,
-                                        Remark: process,
-                                        Date_check: date
-                                    }
-                                    data2.push(newData);
-                                })
-                                $.ajax({
-                                    type: "POST",
-                                    url: "{{ route('save.check.list.detail', ':table') }}"
-                                        .replace(':table', table_2),
-                                    contentType: 'application/json',
-                                    data: JSON.stringify(data2),
-                                    success: function(users) {
-                                        alert('save check-list Thành công');
-                                        $('#table_check_list').DataTable().clear();
-                                        $('#modal-check').modal('hide');
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }
-
-                search();
-            });
-
-            $(document).on('click', '#update-check-list', function(e) {
                 e.preventDefault();
                 var data = [];
                 var data2 = [];
@@ -1157,12 +697,12 @@
                                 })
                                 $.ajax({
                                     type: "POST",
-                                    url: "{{ route('update.check.list.detail', ':table') }}"
-                                        .replace(':table', id),
+                                    url: "{{ route('save.check.list.detail', ':table') }}"
+                                        .replace(':table', table_2),
                                     contentType: 'application/json',
                                     data: JSON.stringify(data2),
                                     success: function(users) {
-                                        alert('Update check-list Thành công');
+                                        alert('save check-list Thành công');
                                         $('#table_check_list').DataTable().clear();
                                         $('#modal-check').modal('hide');
                                     }
@@ -1172,7 +712,7 @@
                     });
                 }
 
-                search();
+
             });
 
             function editTable(table_edit, table) {
@@ -1207,7 +747,6 @@
                 $('#table_check_list').DataTable().clear();
                 $('#table_check_list thead tr').remove();
                 $('#modal-check').modal('hide');
-                show_model_check();
             });
 
             $.ajaxSetup({

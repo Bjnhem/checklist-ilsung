@@ -4,17 +4,15 @@
         <!-- Content Row -->
         <div class="card mb-4">
             <div class="card-header py-3">
-                <h5 class="text-primary mx-3"><b><i class="icon-line-check-square" style="padding-right: 5px"></i>CHECK LIST
+                <h5 class="text-primary mx-3"><b><i class="icon-line-check-square" style="padding-right: 5px"></i>PLAN CHECK LIST
                         EQM</b>
                 </h5>
             </div>
             <div class="card-body">
 
                 <div class="row">
-
                     <div class=" col-sm-2 col-md-2  bottommargin-sm">
                         <label for="">Date Search</label>
-
                         <div class="input-daterange component-datepicker multidate input-group">
                             <input type="text" value="" class="form-control text-start" id="date_form"
                                 placeholder="MM/DD/YYYY">
@@ -25,7 +23,7 @@
                             <br>
                         </span>
                         <button id="add-plan-checklist" class="form-control btn-success"><i
-                                class="icon-line-check"></i>Created plan checklist
+                                class="icon-line-check"></i>Created plan
                         </button>
                     </div>
 
@@ -44,8 +42,6 @@
 @section('admin-js')
     <script>
         $(document).ready(function() {
-            var table = 'result';
-            var table_2 = 'result_detail'
             var colum_table = [];
             var tables;
             var currentDate = new Date();
@@ -184,7 +180,6 @@
             $(document).on('click', '#add-plan-checklist', function(e) {
                 e.preventDefault();
                 var date_created = $('#date_form').val();
-                console.log(date_created);
                 if ($('#date_form').val() == 0) {
                     alert('Bạn điền thiếu thông tin');
                 } else {

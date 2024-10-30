@@ -3,19 +3,14 @@
     <div class="container-fluid" style="margin-top: 1px;">
         <!-- Content Row -->
         <div class="card mb-4">
-            <div class="card-header py-3">
-                <h5 class="text-primary mx-3"><b><i class="icon-line-database" style="padding-right: 5px"></i>
+            <div class="card-header py-3" style="text-align: center">
+                <h5 class="text-primary mx-3" ><b>
                         TỶ LỆ HOÀN THÀNH CHECK LIST EQM THEO LINE</b>
                 </h5>
-                {{-- <h1 class="white">TỶ LỆ HOÀN THÀNH CHECK LIST EQM THEO LINE</h1> --}}
+               
             </div>
             <div class="card-body">
-                <div class="row">
-                    {{-- <div class="col-sm-3">
-                        <span>Line:</span>
-                        <select name="line" id="Line_search" class="form-select">
-                        </select>
-                    </div> --}}
+                <div class="row container">
                     <div class=" col-sm-3 col-md-3  bottommargin-sm">
                         <label for="">Date Search</label>
                         <div class="input-daterange component-datepicker input-group">
@@ -33,22 +28,15 @@
 
                         </select>
                     </div>
-                    {{-- <div class="col-sm-3">
-                        <span>Tình trạng:</span>
-                        <select name="shift" id="Status_search" class="form-select">
-                            <option value="">All</option>
-                            <option value="Completed">Completed</option>
-                            <option value="Pending" selected>Pending</option>
-
-                        </select>
-                    </div> --}}
+                  
                 </div>
                 <br>
                 <div class="demo">
                     <div class="row" id="progress-container-2">
-
+                       
                     </div>
                 </div>
+
                 <div id="tooltip"
                     style="display:none; position:absolute; background-color:rgb(145, 145, 145); border:1px solid black; padding:5px;">
                     Detail
@@ -58,14 +46,6 @@
 
         </div>
     </div>
-
-    {{-- <div class="demo">
-
-
-            <div class="row" id="progress-container-2">
-
-            </div>
-        </div> --}}
 @endsection
 
 @section('admin-js')
@@ -105,7 +85,7 @@
                 show_overview();
 
             });
-            $('#Shift_search').on('change', function(e) {
+            $('#shift_search').on('change', function(e) {
                 e.preventDefault();
                 show_overview();
 
@@ -132,23 +112,28 @@
             });
 
             function createProgressBar(line, completion) {
-                const progressContainer = $('#progress-container');
-
-                const progressCol = $('<div>').addClass('col-xl-6 col-sm-12 px-5');
-                const title = $('<h3>').addClass('progress-title').text(line);
-                const progressDiv = $('<div>').addClass('progress green');
-
+                const progressContainer = $('#progress-container-2');
+                const progressCol = $('<div>').addClass('col-xl-6 col-sm-12 px-4');
+                const progressDiv = $('<div>').addClass('progress').attr('data-line', line);
                 const progressBar = $('<div>').addClass('progress-bar').css({
                     width: `${completion}%`,
-                    background: '#08a061'
+                    background: '#25babc'
                 });
 
                 const progressValue = $('<div>').addClass('progress-value').html(`<span>${completion}</span>%`);
+                const progressTitle = $('<div>').addClass('progressbar-title').html(line);
 
-                progressBar.append(progressValue);
+                progressBar.append(progressValue).append(progressTitle);
                 progressDiv.append(progressBar);
-                progressCol.append(title).append(progressDiv);
+                progressCol.append(progressDiv);
                 progressContainer.append(progressCol);
+
+                progressDiv.on('click', function() {
+                    const lineName = $(this).data('line');
+                    // Điều hướng đến router tương ứng
+                    var url = "{{ route('show.checklist', ':line') }}".replace(':line', lineName);
+                    window.location.href = url;
+                });
             }
 
             function createProgressBar_2(line, completion) {
@@ -189,6 +174,7 @@
                 $('#progress-container-2').html("");
                 var shift_search = $('#shift_search option:selected').text();
                 var date_form = ($('#date_form').val());
+                var line = '';
                 console.log(shift_search);
                 console.log(date_form);
                 $.ajax({
@@ -199,13 +185,13 @@
                     data: {
                         shift: shift_search,
                         date_form: date_form,
+                        line: line
                     },
                     success: function(data) {
                         data.forEach(item => {
-                            console.log(item.Locations);
-                            console.log(item.completion_percentage);
-
-                            createProgressBar_2(item.Locations, item.completion_percentage);
+                            // console.log(item.Locations);
+                            // console.log(item.completion_percentage);
+                            createProgressBar(item.Locations, item.completion_percentage);
                         });
                     },
                     error: function(error) {
