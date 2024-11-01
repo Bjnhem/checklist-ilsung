@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\check_list;
 use Session;
-use App\Models\check_list_detail;
-use App\Models\check_list_item;
 use App\Models\Checklist_item;
 use App\Models\Checklist_master;
 use App\Models\Checklist_result;
@@ -32,51 +30,13 @@ class check_list_controller extends Controller
         //return view('login');
     }
 
-
-    public function index()
-    {
-        return view('pro_3m.pages.check-list.Overview-checklist');
-    }
-
-    public function index_checklist()
-    {
-
-        $line_search = 'Line 01';
-        return view('pro_3m.pages.check-list.Check-checklist', compact('line_search'));
-    }
-
     public function index_checklist_show($line)
     {
 
-        $line_search = $line;
-        return view('pro_3m.pages.check-list.Check-checklist', compact('line_search'));
+
+        $line_id = line::where('Line_name', $line)->pluck('id')->first();
+        return view('Checklist_EQM.pages.Check-checklist', compact('line_id'));
     }
-
-    public function index_master()
-    {
-        return view('pro_3m.pages.check-list.Master-checklist');
-    }
-
-    public function index_user()
-    {
-        return view('pro_3m.pages.check-list.User-checklist');
-    }
-
-
-
-
-    public function admin()
-    {
-        return view('pro_3m.admin.admin');
-    }
-
-    public function index_pending()
-    {
-        $view = 'FTG';
-        return view('pro_3m.pages.check-list.checklist-pending', compact('view'));
-    }
-
-
 
     public function check_list_masster(Request $request)
     {
@@ -117,10 +77,11 @@ class check_list_controller extends Controller
         $khung_check = Checklist_item::where("ID_checklist", $item_check)->get();
         return response()->json(
             [
-                'khung_check' =>   $khung_check,
+                'khung_check' => $khung_check,
             ]
         );
     }
+
 
     public function check_list_detail(Request $request)
     {
@@ -147,36 +108,112 @@ class check_list_controller extends Controller
         );
     }
 
+    // public function save_check_list_2(Request $request, $table)
+    // {
+    //     $id_item_checklist = $request->input('id_checklist');
+    //     $Model = $request->input('Model');
+
+    //     $check = Checklist_result::where('id', $id_item_checklist)
+    //         ->first();
+
+    //     if ($check) {
+    //         $check->Check_status = "Completed";
+    //         $check->Model = $Model;
+    //         $check->Save();
+    //         $id_checklist_detail = $check->id;
+
+    //         return response()->json([
+    //             'id' => $id_checklist_detail,
+    //             'status' => 200,
+    //         ]);
+    //     } else {
+
+    //         return response()->json([
+    //             'status' => 400,
+    //         ]);
+    //     }
+    // }
+
+    // public function save_check_list_detail(Request $request, $table)
+    // {
+    //     $data = $request->all();
+    //     // Checklist_result_detail::where("id_checklist_result", $table)->delete();
+    //     foreach ($data as $item) {
+    //         Checklist_result_detail::create($item);
+    //     }
+
+    //     return response()->json([
+    //         'status' => 200,
+    //         'message' => 'Register Successfully.'
+    //     ]);
+    // }
+
+
+
+
     public function save_check_list(Request $request, $table)
     {
+        // Lấy dữ liệu từ request
         $id_item_checklist = $request->input('id_checklist');
         $Model = $request->input('Model');
+        $details = $request->input('details'); // Lấy thông tin chi tiết
 
-        $check = Checklist_result::where('id', $id_item_checklist)
-            ->first();
-
-        // $check = Checklist_result::where('ID_item_checklist', $id_item_checklist)
-        //     ->where('Date_check', $date)
-        //     ->where('Code_machine', $ID_Machine)
-        //     ->first();
+        // Kiểm tra sự tồn tại của checklist
+        $check = Checklist_result::where('id', $id_item_checklist)->first();
 
         if ($check) {
-            $check->Check_status = "Completed";
-            $check->Model = $Model;
-            $check->Save();
-            $id_checklist_detail =  $check->id;
+
+            // Cập nhật trạng thái và model
+            $id_checklist_detail = $check->id;
+
+            // Nếu có thông tin chi tiết, lưu vào bảng Checklist_result_detail
+            if (!empty($details) && is_array($details)) {
+                foreach ($details as $item) {
+                    // Thêm ID_checklist_result vào từng item
+                    $item['ID_checklist_result'] = $id_checklist_detail;
+                    Checklist_result_detail::create(attributes: $item);
+                }
+            }
+            $checklist_detail = Checklist_result_detail::where('ID_checklist_result', $id_checklist_detail)->first();
+            if ($checklist_detail) {
+                $check->Check_status = "Completed";
+                $check->Model = $Model;
+                $check->save(); // Lưu thay đổi
+            }
 
             return response()->json([
-                'id' =>  $id_checklist_detail,
+                'id' => $id_checklist_detail,
                 'status' => 200,
             ]);
         } else {
-
             return response()->json([
                 'status' => 400,
             ]);
         }
     }
+
+    public function delete_check_list($id)
+    {
+        // Tìm checklist result
+        $checklistResult = Checklist_result::find($id);
+
+        if ($checklistResult) {
+            // Xóa các chi tiết liên quan
+            Checklist_result_detail::where('ID_checklist_result', $id)->delete();
+            $checklistResult->delete();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Xóa thành công.'
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Không tìm thấy dữ liệu.'
+            ]);
+        }
+    }
+
 
 
     public function update_check_list_detail(Request $request, $table)
@@ -193,19 +230,7 @@ class check_list_controller extends Controller
         ]);
     }
 
-    public function save_check_list_detail(Request $request, $table)
-    {
-        $data = $request->all();
-        // Checklist_result_detail::where("id_checklist_result", $table)->delete();
-        foreach ($data as $item) {
-            Checklist_result_detail::create($item);
-        }
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Register Successfully.'
-        ]);
-    }
 
     public function search_check_list_overview(Request $request)
     {
@@ -221,7 +246,7 @@ class check_list_controller extends Controller
                 $data = $table::all();
                 $colum = array_keys($data->first()->getAttributes());
                 $colums = array_diff($colum, ['updated_at']);
-                $data = Checklist_result::where('Shift', 'LIKE', '%' .  $shift . '%')
+                $data = Checklist_result::where('Shift', 'LIKE', '%' . $shift . '%')
                     ->where('Locations', 'LIKE', '%' . $line . '%')
                     ->where('Check_status', 'LIKE', '%' . $Check_status . '%')
                     ->where('Date_check', $date_form)
@@ -310,7 +335,7 @@ class check_list_controller extends Controller
                 $data = $table::all();
                 $colum = array_keys($data->first()->getAttributes());
                 $colums = array_diff($colum, ['updated_at']);
-                $data = Checklist_result::where('Shift', 'LIKE', '%' .  $shift . '%')
+                $data = Checklist_result::where('Shift', 'LIKE', '%' . $shift . '%')
                     ->where('Locations', 'LIKE', '%' . $line . '%')
                     ->where('Check_status', 'LIKE', '%' . $Check_status . '%')
                     ->where('Date_check', $date_form)
@@ -328,30 +353,7 @@ class check_list_controller extends Controller
         return abort(404);
     }
 
-    public function overview_data(Request $request)
 
-    {
-        $shift = ($request->input('shift') == 'All') ? null : $request->input('shift');
-        $line = ($request->input('line') == '') ? null : $request->input('line');
-        $date_form = $request->input('date_form');
-        $progressData = Checklist_result::select(
-            'Locations',
-            \DB::raw('COUNT(*) as total_items'),
-            \DB::raw('SUM(CASE WHEN Check_status = "Completed" THEN 1 ELSE 0 END) as completed_count')
-        )
-            ->where('Shift', 'LIKE', '%' .  $shift . '%')
-            ->where('Locations', 'LIKE', '%' .  $line . '%')
-            ->where('Date_check', $date_form)
-            ->groupBy('Locations')
-            ->get()
-            ->map(function ($item) {
-                $item->completion_percentage = $item->total_items > 0 ? round((($item->completed_count / $item->total_items) * 100), 0) : 0;
-                return $item;
-            });
-
-
-        return response()->json($progressData);
-    }
 
 
     // public function line_type_search(Request $request)
@@ -430,8 +432,8 @@ class check_list_controller extends Controller
                     ->where('line_type', 'LIKE', '%' . $line_type . '%')
                     ->where('phan_loai', 'LIKE', '%' . $phan_loai . '%')
                     ->where('line', 'LIKE', '%' . $line . '%')
-                    ->where('shifts', 'LIKE', '%' .  $shift . '%')
-                    ->where('status', 'LIKE', '%' .  $status . '%')
+                    ->where('shifts', 'LIKE', '%' . $shift . '%')
+                    ->where('status', 'LIKE', '%' . $status . '%')
                     ->where('tinh_trang', 'LIKE', '%' . $tinh_trang . '%')
                     ->whereBetween('date', [$date_form, $date_to])
                     ->orderBy('id', 'asc')->get();
@@ -483,7 +485,7 @@ class check_list_controller extends Controller
         $id_check_list = $check_list->id;
 
         return response()->json([
-            'id' =>  $id_check_list,
+            'id' => $id_check_list,
             'status' => 200,
             'message' => 'Register Successfully.'
         ]);

@@ -15,12 +15,11 @@ use App\Http\Controllers\Plan_checklist;
 
 Route::prefix('/')->group(function () {
 
-    Route::get('', [check_list_controller::class, 'index'])->name('home');
-    Route::get('checklist-overview', [check_list_controller::class, 'overview_data'])->name('checklist.overview');
-    Route::get('checklist', [check_list_controller::class, 'index_checklist'])->name('Check.checklist');
-
-    Route::get('Update-master-checklist', [check_list_controller::class, 'index_master'])->name('Master.checklist');
-    Route::get('User', [check_list_controller::class, 'index_user'])->name('user.checklist');
+    Route::get('', [HomeController::class, 'index'])->name('home');
+    Route::get('checklist-overview', [HomeController::class, 'overview_data'])->name('checklist.overview');
+    Route::get('checklist', [HomeController::class, 'index_checklist'])->name('Check.checklist');
+    Route::get('Update-master', [HomeController::class, 'index_master'])->name('Master.checklist');
+    Route::get('User', [HomeController::class, 'index_user'])->name('user.checklist');
     Route::get('/change-language/{language}', [HomeController::class, 'changeLanguage'])->name('change-language'); // router change ngôn ngữ
 
     /*  Route đăng nhập tài khoản */
@@ -34,7 +33,7 @@ Route::prefix('/')->group(function () {
 
 Route::prefix('Plan-checklist')->group(function () {
     Route::get('', [Plan_checklist::class, 'index_plan'])->name('Plan.checklist');
-
+    Route::post('/add-plan', [Plan_checklist::class, 'created_plan_checklist'])->name('add.plan.checklist');
     Route::post('/check-list-plan', [check_list_controller::class, 'search_check_list_overview'])->name('check.list.overview');  // show model search 
 });
 
@@ -46,6 +45,7 @@ Route::prefix('check-list')->group(function () {
 
 
     Route::post('/check-list-overview', [check_list_controller::class, 'search_check_list_overview'])->name('check.list.overview');  // show model search
+    Route::delete('/checklist/{id}', [check_list_controller::class, 'delete_check_list'])->name('delete.check.list');
 
 
     Route::get('/check-list-show', [check_list_controller::class, 'check_list_detail'])->name('check.list.search');  // show model search
