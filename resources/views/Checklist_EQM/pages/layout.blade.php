@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="{{ asset('smart-ver2/css/animate.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ asset('smart-ver2/css/magnific-popup.css') }}" type="text/css" />
 
-   
+
     <link rel="stylesheet" href="{{ asset('jquery-ui/auto.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/style.min.css') }}">
     <link rel="stylesheet" href="{{ asset('smart-ver2/custom-2.css') }}" />
@@ -34,8 +34,8 @@
 
 
     <link rel="stylesheet" href="{{ asset('vendor/laravel-filemanager/css/lfm.css') }}" />
-       <link rel="stylesheet" href="{{ asset('smart-ver2/custom-admin.css') }}" />
-       <link rel="stylesheet" href="{{ asset('checklist-ilsung/overview.css') }}" />
+    <link rel="stylesheet" href="{{ asset('smart-ver2/custom-admin.css') }}" />
+    <link rel="stylesheet" href="{{ asset('checklist-ilsung/overview.css') }}" />
 
 
     <base href="{{ env('APP_URL') }}">
@@ -63,12 +63,12 @@
                     <ul class="sidebar-body-menu">
                         <li>
                             <a class="show-cat-btn" href="{{ route('home') }}" id="Overview">
-                                <span class="icon-home" style="padding-right:5px"
-                                    aria-hidden="true"></span>
+                                <span class="icon-home" style="padding-right:5px" aria-hidden="true"></span>
                                 Overview
 
                             </a>
                         </li>
+
                         <li>
                             <a class="show-cat-btn" href="{{ route('Check.checklist') }}" id="Checklist">
                                 <span class="icon-line-check-square" style="padding-right:5px"
@@ -77,7 +77,7 @@
 
                             </a>
                         </li>
-                        
+
                         <li>
                             <a class="show-cat-btn" href="{{ route('Plan.checklist') }}" id="Plan">
                                 <span class="icon-line-database" style="padding-right:5px" aria-hidden="true"></span>
@@ -262,7 +262,7 @@
     <!-- Custom scripts -->
     <script src="{{ asset('admin/plugins/script.js') }}"></script>
 
-
+    {{-- <script src="https://unpkg.com/html5-qrcode"></script> --}}
 
     <script src="{{ asset('smart-ver2/DataTables/jQuery-3.7.0/jquery-3.7.0.min.js') }}"></script>
     <script src="{{ asset('smart-ver2/DataTables/datatables.min.js') }}"></script>
@@ -281,8 +281,8 @@
     <script src="{{ asset('smart-ver2/js/plugins.min.js') }}"></script>
 
     <!-- Footer Scripts============================================= -->
-      {{--    <script src="{{ asset('smart-ver2/js/plugins.bootstrap.js') }}"></script> --}}
- 
+    {{--    <script src="{{ asset('smart-ver2/js/plugins.bootstrap.js') }}"></script> --}}
+
     <script src="{{ asset('smart-ver2/js/functions.js') }}"></script>
     <script src="{{ asset('smart-ver2/js/chart.min.js') }}"></script>
     <script src="{{ asset('smart-ver2/js/chartjs-plugin-datalabels-v1.min.js') }}"></script>
@@ -302,7 +302,7 @@
     <script>
         $(document).ready(function() {
 
-           
+
             $('.component-datepicker.input-daterange').datepicker({
                 autoclose: true,
                 format: 'yyyy-mm-dd'

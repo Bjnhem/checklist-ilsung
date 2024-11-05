@@ -8,27 +8,16 @@
                         CHECKLIST EQM STATUS</b>
                 </h5>
             </div>
-            <style>
-                #reader {
-                    width: 100%;
-                    height: 400px;
-                    margin: auto;
-                    display: block;
-                }
-            </style>
-
-
             <div class="card-body">
+                <div class="row" id="progress-container-2">
 
-                <button class="btn btn-primary text-uppercase p-2 mb-3" id="Scan_QR">Scan QR</button>
-                {{-- <div class="row" id="progress-container-2">
-                </div> --}}
+                </div>
                 <br>
                 <div class="row">
                     <div class="col-sm-3">
-                        <span>Machine ID:</span>
-                        <input type="text" name="Machine_ID" id="Machine_ID" value="" class="form-control">
-
+                        <span>Line:</span>
+                        <select name="line" id="Line_search" class="form-select">
+                        </select>
                     </div>
                     <div class=" col-sm-3 col-md-3  bottommargin-sm">
                         <label for="">Date Search</label>
@@ -152,35 +141,11 @@
             </div>
         </div>
 
-        <div class="modal" id="modal-scan">
-            <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="text-primary mx-3">Quét QR Code</b>
-                        </h5>
-
-                    </div>
-                    <div class="modal-footer mx-5">
-                        <button type="button" class="btn btn-warning close close-model-checklist"
-                            id="close-model">Close</button>
-                    </div>
-                    <div class="modal-body mx-5" style="background-color: white; ">
-                        <div id="qr-reader" style="width:500px"></div>
-                        <button id="closeScanBtn" style="display: none;">Đóng Quét</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
 
     </div>
 @endsection
 
 @section('admin-js')
-    <script src="{{ asset('checklist-ilsung/html5.min.js') }}"></script>
-    <script></script>
-
     <script>
         $(document).ready(function() {
             var colum_table = [];
@@ -197,7 +162,7 @@
             var currentDate = new Date();
             var date = currentDate.toISOString().split('T')[0];
             $('#date_form').val(date);
-            let html5QrcodeScanner;
+
             localStorage.setItem('activeItem', 'Checklist');
             var activeItem = localStorage.getItem('activeItem');
             let list = document.querySelectorAll(".sidebar-body-menu a");
@@ -219,51 +184,9 @@
                 localStorage.setItem('activeItem', itemId);
             }
             show_master_check();
-            // show_master_status();
-
-            function reader_QR() {
-                var lastResult, countResults = 0;
-
-                function onScanSuccess(decodedText, decodedResult) {
-                    if (decodedText !== lastResult) {
-                        ++countResults;
-                        lastResult = decodedText;
-                        // Handle on success condition with the decoded message.
-
-                        $('#Machine_ID').val(lastResult);
-                        // console.log(`Scan result ${decodedText}`, decodedResult);
-                        html5QrcodeScanner.clear();
-                        $('#modal-scan').modal('hide');
-
-                    }
-                }
+            show_master_status();
 
 
-                html5QrcodeScanner = new Html5QrcodeScanner(
-                    "qr-reader", {
-                        fps: 10,
-                        qrbox: 250,
-                        experimentalFeatures: {
-                            useBarCodeDetectorIfSupported: true
-                        },
-                        rememberLastUsedCamera: true,
-                        showTorchButtonIfSupported: true
-                    });
-                html5QrcodeScanner.render(onScanSuccess);
-            }
-
-
-
-
-            const qrInput = document.getElementById('Scan_QR');
-            qrInput.addEventListener('click', () => {
-                $('#modal-scan').modal('show');
-                reader_QR();
-            });
-
-            // $('#modal-scan').on('hidden.bs.modal', function() {
-            //     html5QrcodeScanner.clear();
-            // });
 
             function show_master_status() {
                 $.ajax({
@@ -423,29 +346,29 @@
 
             }
 
-            $('#Machine_ID').on('change', function(e) {
+            $('#Line_search').on('change', function(e) {
                 e.preventDefault();
                 search();
-                // show_overview()
+                show_overview()
 
             });
             $('#Shift_search').on('change', function(e) {
                 e.preventDefault();
                 search();
-                // show_overview()
+                show_overview()
 
             });
 
             $('#date_form').on('change', function(e) {
                 e.preventDefault();
                 search();
-                // show_overview()
+                show_overview()
 
             });
             $('#Status_search').on('change', function(e) {
                 e.preventDefault();
                 search();
-                // show_overview()
+                show_overview()
 
             });
 
@@ -458,8 +381,7 @@
                     background: '#25babc'
                 });
 
-                const progressValue = $('<div>').addClass('progress-value').html(
-                    `<span>${completion}</span>%`);
+                const progressValue = $('<div>').addClass('progress-value').html(`<span>${completion}</span>%`);
                 const progressTitle = $('<div>').addClass('progressbar-title').html(
                     'Tỉ lệ hoàn thành checklist ' + line);
 
@@ -488,21 +410,20 @@
                             var status =
                                 '<select name = "status" id="' + value.id +
                                 '" class="form-select">\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             <option value = "OK">OK</option>\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           <option value = "NG">NG</option>\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           </select>';
+                                                                                                                                                                                                                                                                                                                                                                                                     <option value = "OK">OK</option>\
+                                                                                                                                                                                                                                                                                                                                                                                                   <option value = "NG">NG</option>\
+                                                                                                                                                                                                                                                                                                                                                                                                   </select>';
                             var problem =
-                                '<input name="problem" type="text" id="' + value
-                                .id +
+                                '<input name="problem" type="text" id="' + value.id +
                                 '" class="form-control">';
                             var process =
                                 '<select name = "process" id="' + value.id +
                                 '"class="form-select">\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <option value = "OK"></option>\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <option value = "Complete">Complete</option>\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             <option value = "Pending">Pending</option>\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <option value = "Improgress" >Improgress</option>\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </select >';
+                                                                                                                                                                                                                                                                                                                                                                                                      <option value = "OK"></option>\
+                                                                                                                                                                                                                                                                                                                                                                                                      <option value = "Complete">Complete</option>\
+                                                                                                                                                                                                                                                                                                                                                                                                     <option value = "Pending">Pending</option>\
+                                                                                                                                                                                                                                                                                                                                                                                                    <option value = "Improgress" >Improgress</option>\
+                                                                                                                                                                                                                                                                                                                                                                                                    </select >';
                             data.push([
                                 count,
                                 // value.Machine,
@@ -549,30 +470,29 @@
                                 var status =
                                     '<select name = "status" id="' + value.id +
                                     '" class="form-select">\
-                                                                                                                                                                                                                                                                 <option value = "OK" selected>OK</option>\
-                                                                                                                                                                                                                                                                <option value = "NG">NG</option>\
-                                                                                                                                                                                                                                                                 </select>';
+                                                                                                                                                         <option value = "OK" selected>OK</option>\
+                                                                                                                                                        <option value = "NG">NG</option>\
+                                                                                                                                                         </select>';
 
                             else {
                                 var status =
                                     '<select name = "status" id="' + value.id +
                                     '" class="form-select">\
-                                                                                                                                                                                                                                                                 <option value = "OK">OK</option>\
-                                                                                                                                                                                                                                                                <option value = "NG" selected>NG</option>\
-                                                                                                                                                                                                                                                                 </select>';
+                                                                                                                                                         <option value = "OK">OK</option>\
+                                                                                                                                                        <option value = "NG" selected>NG</option>\
+                                                                                                                                                         </select>';
                             }
                             var problem =
-                                '<input name="problem" type="text" id="' + value
-                                .id +
+                                '<input name="problem" type="text" id="' + value.id +
                                 '" class="form-control">';
                             var process =
                                 '<select name = "process" id="' + value.id +
                                 '"class="form-select">\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <option value = "OK"></option>\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <option value = "Complete">Complete</option>\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             <option value = "Pending">Pending</option>\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <option value = "Improgress" >Improgress</option>\
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </select >';
+                                                                                                                                                                                                                                                                                                                                                                                                      <option value = "OK"></option>\
+                                                                                                                                                                                                                                                                                                                                                                                                      <option value = "Complete">Complete</option>\
+                                                                                                                                                                                                                                                                                                                                                                                                     <option value = "Pending">Pending</option>\
+                                                                                                                                                                                                                                                                                                                                                                                                    <option value = "Improgress" >Improgress</option>\
+                                                                                                                                                                                                                                                                                                                                                                                                    </select >';
                             data.push([
                                 count,
                                 value.Machine,
@@ -605,7 +525,7 @@
                 if (tables) {
                     $('#table_check_list_search').DataTable().destroy();
                 }
-                var Machine_ID = $('#Machine_ID').val();
+                var line_search = $('#Line_search option:selected').text();
                 var shift_search = $('#shift_search option:selected').text();
                 var Status_search = $('#Status_search option:selected').text();
                 var date_form = ($('#date_form').val());
@@ -617,7 +537,7 @@
                         url: '{{ route('check.list.overview') }}',
                         dataType: 'json',
                         data: {
-                            Machine_ID: Machine_ID,
+                            line: line_search,
                             shift: shift_search,
                             date_form: date_form,
                             Status: Status_search,
@@ -631,20 +551,17 @@
                             $.each(users.data, function(index, value) {
                                 count++;
                                 if (value.Check_status == "Completed") {
-                                    var view = '<button type="button" value="' +
-                                        value
+                                    var view = '<button type="button" value="' + value
                                         .id +
                                         '" data-bs-toggle="modal" data-bs-target="#modal-check" class="btn btn-warning view-edit check editbtn btn-sm" id="' +
                                         value.ID_checklist + '">Edit</button>' +
-                                        ' <input type="hidden" value="' + value
-                                        .ID_checklist +
+                                        ' <input type="hidden" value="' + value.ID_checklist +
                                         '" id="' + value.id + '">' +
                                         '<button type="button" value="' + value
                                         .id +
                                         '" data-bs-toggle="modal" data-bs-target="#modal-delete" class="btn btn-danger view-delete check editbtn btn-sm" id="' +
                                         value.ID_checklist + '">Delete</button>' +
-                                        ' <input type="hidden" value="' + value
-                                        .ID_checklist +
+                                        ' <input type="hidden" value="' + value.ID_checklist +
                                         '" id="' + value.id + '">';
                                 } else if (value.Check_status == "Pending") {
                                     var view =
@@ -653,18 +570,14 @@
                                         .id +
                                         '" data-bs-toggle="modal" data-bs-target="#modal-check" class="btn btn-primary  view-check check editbtn btn-sm" id="' +
                                         value.ID_checklist + '">Check</button>' +
-                                        '<input type="hidden" value ="' + value
-                                        .ID_checklist +
+                                        '<input type="hidden" value ="' + value.ID_checklist +
                                         '" id="' + value.id + '">';
                                 } else {
-                                    var view = '<button type="button" value="' +
-                                        value
+                                    var view = '<button type="button" value="' + value
                                         .id +
                                         '" data-bs-toggle="modal" data-bs-target="#modal-delete" class="btn btn-danger view-delete check editbtn btn-sm" id="' +
-                                        value.ID_checklist +
-                                        '">Delete All</button>' +
-                                        ' <input type="hidden" value="' + value
-                                        .ID_checklist +
+                                        value.ID_checklist + '">Delete All</button>' +
+                                        ' <input type="hidden" value="' + value.ID_checklist +
                                         '" id="' + value.id + '">';
                                 }
                                 data.push([
@@ -802,14 +715,12 @@
                 if (confirm('Bạn có chắc chắn muốn xóa không?')) {
                     $.ajax({
                         type: "DELETE",
-                        url: "{{ route('delete.check.list', ':id') }}".replace(':id',
-                            idChecklist),
+                        url: "{{ route('delete.check.list', ':id') }}".replace(':id', idChecklist),
                         success: function(response) {
                             if (response.status === 200) {
                                 alert('Xóa thành công');
                                 // Cập nhật lại bảng hoặc xóa hàng đã xóa
-                                $('#table_check_list_search').DataTable().row(row)
-                                    .remove()
+                                $('#table_check_list_search').DataTable().row(row).remove()
                                     .draw();
 
                             } else {
@@ -849,11 +760,9 @@
                 $('#table-check-list').DataTable().rows().every(function() {
                     const rowData = this.data();
                     const problems = $(this.node()).find('input').val();
-                    const status = $(this.node()).find(
-                            'select[name="status"] option:selected')
+                    const status = $(this.node()).find('select[name="status"] option:selected')
                         .text();
-                    const process = $(this.node()).find(
-                            'select[name="process"] option:selected')
+                    const process = $(this.node()).find('select[name="process"] option:selected')
                         .text();
 
                     data.details.push({
@@ -925,8 +834,7 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "{{ route('save.check.list', ':table') }}".replace(
-                            ':table',
+                        url: "{{ route('save.check.list', ':table') }}".replace(':table',
                             'checklist_result'),
                         dataType: 'json',
                         data: data,
@@ -937,37 +845,33 @@
                             } else {
                                 var id = response.id;
                                 console.log(id);
-                                $('#table-check-list').DataTable().rows().every(
-                                    function() {
-                                        var rowData = this.data();
-                                        var problems = $(this.node()).find(
-                                            'input').val();
-                                        var status = $(this.node()).find(
-                                                'select[name="status"] option:selected'
-                                            )
-                                            .text();
-                                        var process = $(this.node()).find(
-                                                'select[name="process"] option:selected'
-                                            )
-                                            .text();
-                                        var newData = {
-                                            id_checklist_result: id,
-                                            Locations: line,
-                                            Model: Model,
-                                            ID_item_checklist: "1",
-                                            Machine: Machine,
-                                            item_checklist: Checklist_item,
-                                            Khung_check: Khung_gio,
-                                            Shift: shift,
-                                            Code_machine: ID_machine,
-                                            Check_status: status,
-                                            Status: problems,
-                                            Remark: process,
-                                            Date_check: date
+                                $('#table-check-list').DataTable().rows().every(function() {
+                                    var rowData = this.data();
+                                    var problems = $(this.node()).find('input').val();
+                                    var status = $(this.node()).find(
+                                            'select[name="status"] option:selected')
+                                        .text();
+                                    var process = $(this.node()).find(
+                                            'select[name="process"] option:selected')
+                                        .text();
+                                    var newData = {
+                                        id_checklist_result: id,
+                                        Locations: line,
+                                        Model: Model,
+                                        ID_item_checklist: "1",
+                                        Machine: Machine,
+                                        item_checklist: Checklist_item,
+                                        Khung_check: Khung_gio,
+                                        Shift: shift,
+                                        Code_machine: ID_machine,
+                                        Check_status: status,
+                                        Status: problems,
+                                        Remark: process,
+                                        Date_check: date
 
-                                        }
-                                        data2.push(newData);
-                                    })
+                                    }
+                                    data2.push(newData);
+                                })
                                 $.ajax({
                                     type: "POST",
                                     url: "{{ route('update.check.list.detail', ':table') }}"
@@ -975,10 +879,8 @@
                                     contentType: 'application/json',
                                     data: JSON.stringify(data2),
                                     success: function(users) {
-                                        alert(
-                                            'Update check-list Thành công');
-                                        $('#table_check_list')
-                                            .DataTable().clear();
+                                        alert('Update check-list Thành công');
+                                        $('#table_check_list').DataTable().clear();
                                         $('#modal-check').modal('hide');
                                     }
                                 });
@@ -1022,8 +924,6 @@
                 $('#table_check_list').DataTable().clear();
                 $('#table_check_list thead tr').remove();
                 $('#modal-check').modal('hide');
-                $('#modal-scan').modal('hide');
-                html5QrcodeScanner.clear();
                 show_model_check();
             });
 

@@ -235,7 +235,7 @@ class check_list_controller extends Controller
     public function search_check_list_overview(Request $request)
     {
 
-        $line = ($request->input('line') == '---') ? null : $request->input('line');
+        $Machine_ID = ($request->input('Machine_ID') == '') ? null : $request->input('Machine_ID');
         $shift = ($request->input('shift') == 'All') ? null : $request->input('shift');
         $Check_status = ($request->input('Status') == 'All') ? null : $request->input('Status');
         $date_form = $request->input('date_form');
@@ -247,7 +247,7 @@ class check_list_controller extends Controller
                 $colum = array_keys($data->first()->getAttributes());
                 $colums = array_diff($colum, ['updated_at']);
                 $data = Checklist_result::where('Shift', 'LIKE', '%' . $shift . '%')
-                    ->where('Locations', 'LIKE', '%' . $line . '%')
+                    ->where('Code_machine', 'LIKE', '%' . $Machine_ID . '%')
                     ->where('Check_status', 'LIKE', '%' . $Check_status . '%')
                     ->where('Date_check', $date_form)
                     ->orderBy('Check_status', "desc")

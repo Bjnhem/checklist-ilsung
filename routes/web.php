@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\admin\master_data_controller;
 use App\Http\Controllers\check_list_controller;
 use App\Http\Controllers\Plan_checklist;
+use App\Http\Controllers\QRCodeController;
 
 /*=======  Router home============= */
 
@@ -42,7 +43,7 @@ Route::prefix('check-list')->group(function () {
     Route::get('/checklist-masster', [check_list_controller::class, 'check_list_masster'])->name('check.list.masster');  // show model search
     Route::get('/item-check', [check_list_controller::class, 'Machine_ID_search'])->name('item.checklist.search');  // show model search
     Route::get('/khung-gio-check', [check_list_controller::class, 'Khung_check'])->name('khung.check.search');  // show model search
-
+    Route::get('/scan', [QRCodeController::class, 'index'])->name('scan.checklist');
 
     Route::post('/check-list-overview', [check_list_controller::class, 'search_check_list_overview'])->name('check.list.overview');  // show model search
     Route::delete('/checklist/{id}', [check_list_controller::class, 'delete_check_list'])->name('delete.check.list');

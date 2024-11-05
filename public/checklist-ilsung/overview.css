@@ -13,7 +13,6 @@
     justify-content: center;
 }
 
-
 .progress.red .progress-value {
     background: #ec4251;
 }
@@ -82,7 +81,6 @@
     -ms-flex-pack: justify;
     justify-content: space-between;
     background: #000000d6 !important;
-
     width: 253px;
     padding: 20px 15px 37px 20px;
     -webkit-transition: .5s all;
@@ -91,11 +89,14 @@
     min-height: 100vh;
 }
 
-.cat-sub-menu.visible a:hover, .sidebar-body-menu a.active, .sidebar-body-menu a.active::after, .sidebar-body-menu a:hover, .sidebar-body-menu a:hover::after {
+.cat-sub-menu.visible a:hover,
+.sidebar-body-menu a.active,
+.sidebar-body-menu a.active::after,
+.sidebar-body-menu a:hover,
+.sidebar-body-menu a:hover::after {
     opacity: 1;
     color: greenyellow;
 }
-
 
 .progress {
     height: 40px;
@@ -119,7 +120,6 @@
     border-radius: 3px;
     font-weight: 600;
     width: 50px;
-
 }
 
 .progress .progressbar-title {
@@ -144,14 +144,16 @@
     }
 }
 
-#myTab, #study-Tab {
+#myTab,
+#study-Tab {
     column-gap: 10px;
     border-bottom: 0;
     justify-content: center;
     padding: 20px 0 0 0;
 }
 
-#myTab li .nav-link, #study-Tab li .nav-link {
+#myTab li .nav-link,
+#study-Tab li .nav-link {
     color: #000;
     background-color: #cfcfcf;
     border-radius: 10px;
@@ -162,4 +164,8 @@
 #table_check_list_search tbody tr td:nth-child(11) {
     display: flex;
     column-gap: 5px;
+}
+
+#modal-scan .modal-body {
+    justify-items: center;
 }
